@@ -1,0 +1,8 @@
+<!ENTITY accountprovisioner.label "Your localized menuitem">
+<!ENTITY accountprovisionerContext.label "Your Menuitem">
+<!ENTITY accountprovisionerContext.accesskey "Y">
+<!ENTITY accountprovisionerToolbarButton.label "Your Toolbar Button">
+<!ENTITY accountprovisionerToolbarButton.tooltip "This is your toolbar button!">
+<!ENTITY accountprovisionerSidebar.label "Your Sidebar">
+<!ENTITY accountprovisionerToolbar.name  "example">
+<!ENTITY accountprovisionerToolbar.label "This is an example toolbar. You can hide it under View &gt; toolbars &gt; &accountprovisionerToolbar.name;">

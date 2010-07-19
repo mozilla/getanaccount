@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is AccountProvisioner code.
+   -
+   - The Initial Developer of the Original Code is
+   - The Mozilla Foundation.
+   - Portions created by the Initial Developer are Copyright (C) 2010
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   - Blake Winton <bwinton@mozillamessaging.com>
+   - Bryan Clark <clarkbw@mozillamessaging.com>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      version="-//W3C//DTD XHTML 1.1//EN" xml:lang="en">
+<head>
+  <!-- Themes -->
+  <style type="text/css">
+  body {
+    font-family: sans-serif;
+  }
+  #window {
+    margin: 20px auto;
+    width: 400px;
+    height: 400px;
+    border: 1px outset #ddd;
+    padding: 10px;
+  }
+  .message {
+    text-align: center;
+    font-size: 16px;
+    margin: 10px;
+    font-weight: bold;
+    color: #222;
+  }
+  #create {
+    min-height: 300px;
+  }
+  #entry {
+    position: relative;
+  }
+  label {
+    display: block;
+    color: #444;
+    font-size: 12px;
+    margin: 7px 3px;
+  }
+   #notifications, #go, #existing {
+    text-align: -moz-center;
+  }
+  #username {
+    margin: 0 5px;
+    font-weight: bold;
+    text-align: right;
+    width: 10em;
+    font-size: 16px;
+  }
+  #provider {
+    font-size: 16px;
+  }
+  option .brand {
+    font-size: 12px;
+    font-weight: bold;
+    color: #222;
+  }
+  option .domain {
+    font-size: 10px;
+    color: #444;
+  }
+  #preview {
+    text-align: -moz-center;
+  }
+  #name {
+    color: #666;
+  }
+  #name:after {
+    content: ": ";
+  }
+  .at {
+  }
+  #notifications {
+    outline: 1px solid #aaa;
+    background: #efefef;
+    width: 60%;
+    margin: auto;
+    display: none;
+  }
+  #notifications > div {
+    display: none;
+    text-align: left;
+    margin: 10px;
+  }
+  #notifications .error {
+    color: red;
+    padding-top: 5px;
+  }
+  #notifications ul.options {
+    list-style: none;
+    padding: 0 10px;
+    padding-bottom: 10px;
+  }
+  #notifications ul.options li {
+    margin: 3px;
+    color: #0066dd;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  #go {
+  }
+  button.create {
+    margin: 10px 0;
+    -moz-appearance: none;
+    border: 1px solid #3B7C42;
+    color: #fff;
+    text-shadow: -1px -1px 0 #3B7C42;
+    -moz-border-radius: 5px;
+    background: -moz-linear-gradient(top, #6BaC72, #4B8C52);
+    font-size: 16px;
+  }
+  #existing {
+    display: none;
+    padding: 40px;
+    border-top: 1px solid #aaa;
+  }
+  #existing * {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  #existing .message {
+    color: #666;
+  }
+  button.existing {
+    margin: 10px;
+    -moz-appearance: none;
+    border: 1px solid #2C54a6;
+    color: #fff;
+    text-shadow: -1px -1px 0 #2C54a6;
+    -moz-border-radius: 5px;
+    background: -moz-linear-gradient(top, #5C84d6, #3C64B6);
+  }
+  </style>
+  <script type="application/javascript;version=1.8"
+      src="http://code.jquery.com/jquery-1.4.2.js"></script>
+  <script type="application/javascript;version=1.8"
+      src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.js"></script>
+  <script  type="text/javascript;version=1.8">
+  $(document).ready(function() {
+    // Snarf the things I need out of the window arguments.
+    NewMailAccount = window.arguments[0].NewMailAccount;
+    msgWindow = window.arguments[0].msgWindow;
+
+    $("#provider").change(function() {
+      var domain = $(this).find(":selected").attr("domain");
+      $("#notifications").hide();
+      $(".domain").text(domain);
+    }).change();
+    $("#username").keyup(function() {
+      $("#notifications").hide();
+      $(".username").text($(this).val());
+    }).trigger('keyup');
+    $("button.create").click(function() {
+      $("#notifications").show();
+      $("#notifications .error").fadeIn();
+      $("#notifications .options").fadeIn();
+    });
+    $("button.check").click(function() {
+      $("#notifications").show();
+      $("#notifications .error").fadeIn();
+      $("#notifications .options").fadeIn();
+    });
+    $(".options li").click(function() {
+      $("#notifications").hide();
+      $("#username").val($(this).attr("username")).trigger('keyup');
+      $("button.create").effect('highlight', {}, 'slow');
+    })
+    $("#username").focus().select() ;
+    $("#existing").fadeIn(3 * 1000);
+  });
+  </script>
+</head>
+<body>
+
+  <div id="window">
+
+    <div id="create">
+
+      <div class="message">
+        Create an Email Account for Thunderbird
+      </div>
+
+      <div id="entry">
+        <div style="display:inline-block">
+          <label for="username">Desired email user name:</label>
+          <input type="text" id="username" name="username" autocomplete="off" value="username"/>
+        </div>
+
+        <span class="at">@</span>
+
+        <div style="display:inline-block">
+          <label for="username">Choose a domain:</label>
+          <select id="provider">
+            <option brand="GMail" domain="gmail.com">gmail.com</option>
+            <option brand="Yahoo!" domain="yahoo.com">yahoo.com</option>
+          </select>
+        </div>
+        <button style="margin-left: 50px;" class="check">Check Availability!</button>
+      </div>
+
+      <div id="notifications">
+        <div class="error"><span class="username"></span><span class="at">@</span><span class="domain"></span> is not available</div>
+        <div class="options">
+          <div>Here are some available alternatives:</div>
+          <ul class="options">
+            <li username="joey1209">joey1209@gmail.com</li>
+            <li username="joey1454">joey1454@gmail.com</li>
+            <li username="joey16666">joey16666@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="preview">
+        <!--<div></div>-->
+        <button class="create">Create Account &#187;</button>
+      </div>
+
+    </div>
+
+    <div id="existing">
+      <div class="message">
+        Already have an email account you want to use?
+      </div>
+      <button class="existing"
+              onclick="NewMailAccount(msgWindow);window.close();"
+              >Use Existing Account</button>
+    </div>
+
+  </div>
+
+</body>
+</html>
