@@ -49,7 +49,7 @@
   <link rel="stylesheet"
         type="text/css"
         href="chrome://accountprovisioner/content/accountProvisioner.css" />
-  
+
   <script type="application/javascript;version=1.8"
           src="http://code.jquery.com/jquery-1.4.2.js">
   </script>
@@ -62,61 +62,75 @@
 </head>
 <body>
 
-  <div id="window">
+  <!-- div id="window" -->
 
     <div id="create">
 
       <div class="message">
-        Create an Email Account for Thunderbird
+        Create a new email account for Thunderbird?
       </div>
 
       <div id="entry">
-        <div style="display:inline-block">
-          <label for="username">Desired email user name:</label>
+
+        <div class="chooseName">
+          <label for="username">1. Choose username:</label>
           <input type="text" id="username" name="username" autocomplete="off" value="username"/>
         </div>
 
-        <span class="at">@</span>
-
-        <div style="display:inline-block">
-          <label for="username">Choose a domain:</label>
+        <div class="chooseDomain">
+          <label for="username">2. Choose a domain:</label>
           <select id="provider">
-            <option brand="GMail" domain="gmail.com">gmail.com</option>
-            <option brand="Yahoo!" domain="yahoo.com">yahoo.com</option>
+
+            <option brand="GMail" domain="gmail.com">@gmail.com</option>
+            <option brand="Yahoo!" domain="yahoo.com">@yahoo.com</option>
           </select>
         </div>
-        <button style="margin-left: 50px;" class="check">Check Availability!</button>
+
+        <div class="checkAvailability">
+          <label for="availability">3. Confirm:</label>
+          <button class="check" onclick="$(this).toggleClass('clicked')">Create account</button>
+
+        </div>
       </div>
 
       <div id="notifications">
-        <div class="error"><span class="username"></span><span class="at">@</span><span class="domain"></span> is not available</div>
-        <div class="options">
-          <div>Here are some available alternatives:</div>
-          <ul class="options">
+        <div class="error">
+          <span class="username">
+          </span><span class="at">@</span><span class="domain">
+          </span> is not available.  Here are some available alternatives:</span>
+           <ul class="options">
             <li username="joey1209">joey1209@gmail.com</li>
             <li username="joey1454">joey1454@gmail.com</li>
             <li username="joey16666">joey16666@gmail.com</li>
           </ul>
         </div>
+
+        <div class="success">
+          <div>Awesome! <span class="username">
+          </span><span class="at">@</span><span class="domain">
+          </span>is available.</div>
+          <div class="options">
+            <button class="next">Continue</button>
+          </div>
+        </div>
       </div>
 
-      <div id="preview">
-        <!--<div></div>-->
+      <!-- div id="preview">
         <button class="create">Create Account &#187;</button>
-      </div>
+      </div -->
 
     </div>
 
     <div id="existing">
       <div class="message">
-        Already have an email account you want to use?
+        Or do you already have an email account you want to use?
       </div>
       <button class="existing"
               onclick="NewMailAccount(msgWindow);window.close();"
               >Use Existing Account</button>
     </div>
 
-  </div>
+  <!-- /div -->
 
 </body>
 </html>

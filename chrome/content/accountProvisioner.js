@@ -46,25 +46,30 @@ $(function() {
     $("#notifications").hide();
     $(".domain").text(domain);
   }).change();
+
   $("#username").keyup(function() {
     $("#notifications").hide();
     $(".username").text($(this).val());
   }).trigger('keyup');
+
   $("button.create").click(function() {
     $("#notifications").show();
     $("#notifications .error").fadeIn();
     $("#notifications .options").fadeIn();
   });
+
   $("button.check").click(function() {
     $("#notifications").show();
     $("#notifications .error").fadeIn();
     $("#notifications .options").fadeIn();
   });
+
   $(".options li").click(function() {
     $("#notifications").hide();
     $("#username").val($(this).attr("username")).trigger('keyup');
     $("button.create").effect('highlight', {}, 'slow');
   })
+
   $("#username").focus().select() ;
   $("#existing").fadeIn(3 * 1000);
 });
