@@ -36,6 +36,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var providers = {
+  "gmail.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
+  "yahoo.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
+};
+
 $(function() {
   // Snarf the things I need out of the window arguments.
   NewMailAccount = window.arguments[0].NewMailAccount;
@@ -43,28 +48,52 @@ $(function() {
 
   $("#provider").change(function() {
     var domain = $(this).find(":selected").attr("domain");
+    $("#notifications .success").hide();
+    $("#notifications .error").hide();
     $("#notifications").hide();
     $(".domain").text(domain);
   }).change();
 
   $("#username").keyup(function() {
+    $("#notifications .success").hide();
+    $("#notifications .error").hide();
     $("#notifications").hide();
     $(".username").text($(this).val());
   }).trigger('keyup');
 
   $("button.create").click(function() {
     $("#notifications").show();
-    $("#notifications .error").fadeIn();
-    $("#notifications .options").fadeIn();
+    $("#existing").fadeOut(3 * 1000);
   });
 
   $("button.check").click(function() {
     $("#notifications").show();
-    $("#notifications .error").fadeIn();
-    $("#notifications .options").fadeIn();
+    var domain = $("#provider").find(":selected").attr("domain");
+    var username = $("#username").val();
+    dump("domain="+domain+"\n");
+    dump("username="+username+"\n");
+    var handler = providers[domain] +
+                  "?domain=" + domain +
+                  "&username=" + username;
+    $.getJSON(handler, function(data) {
+      if (data.succeeded) {
+        $("#notifications .success").fadeIn();
+      }
+      else {
+        $("#notifications .options").html("");
+        for (let i in data.alternates) {
+          let alt = data.alternates[i]
+          $("#notifications .options").append(
+            "<li username='" + alt + "'>" + alt + "@" + data.domain + "</li>");
+        };
+        $("#notifications .error").fadeIn();
+      }
+    });
   });
 
-  $(".options li").click(function() {
+  $(".options").delegate("li", "click", function() {
+    $("#notifications .success").hide();
+    $("#notifications .error").hide();
     $("#notifications").hide();
     $("#username").val($(this).attr("username")).trigger('keyup');
     $("button.create").effect('highlight', {}, 'slow');

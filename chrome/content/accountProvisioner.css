@@ -48,20 +48,14 @@ body {
 
 #window {
   margin: 20px auto;
-  width: 602px;
   border: 1px solid #ccc;
   background-color: #fafafa;
-  -moz-box-shadow: 0 5px 15px #aaa;
-  -moz-border-radius: 5px;
+  height: auto;
 }
 
 .message {
   padding: 10px;
   font-weight: bold;
-}
-
-#create {
-  height: auto;
 }
 
 #entry {
@@ -81,7 +75,7 @@ body {
 }
 
 #entry button.check,
-button.next {
+#notifications button.create {
   font-size: 12px;
   padding: 2px;
   border: 1px solid #4E804D;
@@ -90,6 +84,10 @@ button.next {
   background-image: -moz-linear-gradient(center top , #67B364 0%, #55A152 100%);
   color: #fff;
   font-weight: bold;
+}
+
+#notifications button.create {
+  width: 180px;
 }
 
 label {
@@ -164,19 +162,20 @@ option .domain {
   margin: 10px;
 }
 
-#notifications .error {
-  color: green;
+#notifications .error,
+#notifications .success {
   /* width: 380px; */
   padding-top: 5px;
   float: left;
   display: inline-block;
 }
 
-#notifications button.next {
-  width: 180px;
-  margin: 0 0 0 10px;
-  float: left;
-  display: inline-block;
+#notifications .error {
+  color: red;
+}
+
+#notifications .success {
+  color: green;
 }
 
 #notifications ul.options {
@@ -192,18 +191,6 @@ option .domain {
 }
 
 #go {
-}
-
-button.create {
-  margin: 10px 0;
-  -moz-appearance: none;
-  border: 1px solid #3B7C42;
-  color: #fff;
-  text-shadow: -1px -1px 0 #3B7C42;
-  -moz-border-radius: 5px;
-  background: -moz-linear-gradient(top, #6BaC72, #4B8C52);
-  font-size: 16px;
-  display: none;
 }
 
 #existing {

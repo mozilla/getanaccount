@@ -62,75 +62,61 @@
 </head>
 <body>
 
-  <!-- div id="window" -->
+  <div id="window">
 
-    <div id="create">
-
-      <div class="message">
-        Create a new email account for Thunderbird?
-      </div>
-
-      <div id="entry">
-
-        <div class="chooseName">
-          <label for="username">1. Choose username:</label>
-          <input type="text" id="username" name="username" autocomplete="off" value="username"/>
-        </div>
-
-        <div class="chooseDomain">
-          <label for="username">2. Choose a domain:</label>
-          <select id="provider">
-
-            <option brand="GMail" domain="gmail.com">@gmail.com</option>
-            <option brand="Yahoo!" domain="yahoo.com">@yahoo.com</option>
-          </select>
-        </div>
-
-        <div class="checkAvailability">
-          <label for="availability">3. Confirm:</label>
-          <button class="check" onclick="$(this).toggleClass('clicked')">Create account</button>
-
-        </div>
-      </div>
-
-      <div id="notifications">
-        <div class="error">
-          <span class="username">
-          </span><span class="at">@</span><span class="domain">
-          </span> is not available.  Here are some available alternatives:</span>
-           <ul class="options">
-            <li username="joey1209">joey1209@gmail.com</li>
-            <li username="joey1454">joey1454@gmail.com</li>
-            <li username="joey16666">joey16666@gmail.com</li>
-          </ul>
-        </div>
-
-        <div class="success">
-          <div>Awesome! <span class="username">
-          </span><span class="at">@</span><span class="domain">
-          </span>is available.</div>
-          <div class="options">
-            <button class="next">Continue</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- div id="preview">
-        <button class="create">Create Account &#187;</button>
-      </div -->
-
+    <div class="message">
+      Create a new email account for Thunderbird?
     </div>
 
-    <div id="existing">
-      <div class="message">
-        Or do you already have an email account you want to use?
+    <div id="entry">
+
+      <div class="chooseName">
+        <label for="username">1. Choose username:</label>
+        <input type="text" id="username" name="username" autocomplete="off" value="username"/>
       </div>
-      <button class="existing"
-              onclick="NewMailAccount(msgWindow);window.close();"
-              >Use Existing Account</button>
+
+      <div class="chooseDomain">
+        <label for="username">2. Choose a domain:</label>
+        <select id="provider">
+
+          <option brand="GMail" domain="gmail.com">@gmail.com</option>
+          <option brand="Yahoo!" domain="yahoo.com">@yahoo.com</option>
+        </select>
+      </div>
+
+      <div class="checkAvailability">
+        <label for="availability">3. Confirm:</label>
+        <button class="check" onclick="$(this).toggleClass('clicked')">Create account</button>
+
+      </div>
     </div>
 
-  <!-- /div -->
+    <div id="notifications">
+      <div class="error">
+        <span class="username">
+        </span><span class="at">@</span><span class="domain">
+        </span> is not available.  Here are some available alternatives:</span>
+        <ul class="options"/>
+      </div>
+
+      <div class="success">
+        <span>Awesome! <span class="username">
+        </span><span class="at">@</span><span class="domain">
+        </span> is available.</span>
+        <button class="create">Continue</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="existing">
+    <div class="message">
+      Or do you already have an email account you want to use?
+    </div>
+    <button class="existing"
+            onclick="NewMailAccount(msgWindow);window.close();"
+            >Use Existing Account</button>
+  </div>
 
 </body>
 </html>
