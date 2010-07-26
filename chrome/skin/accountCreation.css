@@ -1,0 +1,42 @@
+
+#autoconfigWizard {
+  width: 640px;
+  height: 320px;
+}
+
+#autoconfigWizard,
+#mastervbox {
+  background-color: #fff;
+}
+
+.groupbox-body {
+  -moz-appearance: none;
+}
+
+#autoconfigWizard textbox {
+  -moz-appearance: none;
+}
+
+#autoconfigWizard textbox,
+#autoconfigWizard menulist {
+  font-size: 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 3px;
+  -moz-border-radius: 5px;
+}
+
+#autoconfigWizard input[disabled] {
+  -moz-appearance: none;
+  background-color: #efefef;
+  color: graytext !important;
+}
+
+#autoconfigWizard textbox[disabled],
+#autoconfigWizard menulist[disabled="true"] {
+  -moz-appearance: none;
+  color: #ccc;
+  background-color: #efefef;
+  border: 1px solid #ccc;
+  padding: 3px;
+}
