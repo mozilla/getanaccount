@@ -114,14 +114,13 @@
     <div class="message">
       Or do you already have an email account you want to use?
     </div>
-    <button class="existing"
-            onclick="useExisting();">Use Existing Account</button>
+    <button onclick="useExisting();">Use Existing Account</button>
   </div>
 
   <div id="addExistingAccount">
-    <div>Insert use existing iframe here.</div>
-    <button class="existing"
-            onclick="createNew();">Create New Account</button>
+    <iframe src="chrome://messenger/content/accountcreation/emailWizard.xul">
+    </iframe>
+    <button onclick="createNew();">Create New Account</button>
   </div>
 
 </body>
