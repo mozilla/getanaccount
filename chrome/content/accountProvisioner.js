@@ -102,3 +102,15 @@ $(function() {
   $("#username").focus().select() ;
   $("#existing").fadeIn(3 * 1000);
 });
+
+function useExisting() {
+  $("#window").hide();
+  $("#existing").hide();
+  $("#addExistingAccount").show();
+};
+
+function createNew() {
+  $("#window").show();
+  $("#existing").show();
+  $("#addExistingAccount").hide();
+};
