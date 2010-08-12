@@ -1,0 +1,74 @@
+# HG changeset patch
+# User Blake Winton <bwinton@latte.ca>
+# Date 1281644524 14400
+
+diff --git a/mailnews/base/prefs/content/accountUtils.js b/mailnews/base/prefs/content/accountUtils.js
+--- a/mailnews/base/prefs/content/accountUtils.js
++++ b/mailnews/base/prefs/content/accountUtils.js
+@@ -310,37 +310,40 @@ function migrateGlobalQuotingPrefs(allId
+     pref.setIntPref("mailnews.quotingPrefs.version", 1);
+   }
+   return migrated;
+ }
+ 
+ // we do this from a timer because if this is called from the onload=
+ // handler, then the parent window doesn't appear until after the wizard
+ // has closed, and this is confusing to the user
+-function NewMailAccount(msgWindow, okCallback)
++function NewMailAccount(msgWindow, okCallback, extraData)
+ {
+   if (!msgWindow)
+     throw new Error("NewMailAccount must be given a msgWindow.");
+-  setTimeout(msgNewMailAccount, 0, msgWindow, okCallback);
++  setTimeout(msgNewMailAccount, 0, msgWindow, okCallback, extraData);
+ }
+ 
+ // @see msgOpenAccountWizard above
+-function msgNewMailAccount(msgWindow, okCallback)
++function msgNewMailAccount(msgWindow, okCallback, extraData)
+ {
+   if (!msgWindow)
+     throw new Error("msgNewMailAccount must be given a msgWindow.");
+   let wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                      .getService()
+                      .QueryInterface(Components.interfaces.nsIWindowMediator);
+   let existingWindow = wm.getMostRecentWindow("mail:autoconfig");
+   if (existingWindow)
+     existingWindow.focus();
+   else
+     window.openDialog("chrome://messenger/content/accountcreation/emailWizard.xul",
+-                      "AccountSetup", "chrome,titlebar,centerscreen",{msgWindow:msgWindow, okCallback:okCallback});
++                      "AccountSetup", "chrome,titlebar,centerscreen",
++                      {msgWindow:msgWindow,
++                       okCallback:okCallback,
++                       extraData:extraData});
+ 
+   // If we started with no servers at all and "smtp servers" list selected,
+   // refresh display somehow. Bug 58506.
+   // TODO Better fix: select newly created account (in all cases)
+   if (typeof(getCurrentAccount) == "function" && // in AccountManager, not menu
+       !getCurrentAccount())
+     selectServer(null, null);
+ }
+diff --git a/mailnews/base/prefs/content/accountcreation/emailWizard.xul b/mailnews/base/prefs/content/accountcreation/emailWizard.xul
+--- a/mailnews/base/prefs/content/accountcreation/emailWizard.xul
++++ b/mailnews/base/prefs/content/accountcreation/emailWizard.xul
+@@ -381,17 +381,17 @@
+                 </menulist>
+               </hbox>
+             </hbox>
+           </hbox>
+         </vbox>
+       </groupbox>
+     </vbox>
+     <spacer flex="1"/>
+-    <hbox>
++    <hbox id="button_box">
+       <button id="advanced_settings"
+               label="&manualSetup.label;"
+               accesskey="&manualSetup.accesskey;"
+               class="larger-button"
+               disabled="true"
+               hidden="true"
+               oncommand="gEmailConfigWizard.advancedSettings();"/>
+       <spacer flex="1"/>
