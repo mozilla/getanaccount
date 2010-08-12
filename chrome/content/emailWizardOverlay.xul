@@ -44,6 +44,11 @@
 <overlay id="accountprovisioner-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/javascript" src="overlay.js;version=1.8"/>
-  <menuitem id="newMailAccountMenuItem"
-            oncommand="NewMailAccountProvisioner(msgWindow);"/>
+  <hbox id="button_box">
+    <button id="other_button"
+            label="Back to previous"
+            class="larger-button"
+            position="1"
+            oncommand="NewMailAccountProvisioner(window.arguments[0].msgWindow, window.arguments[0].extraData)"/>
+  </hbox>
 </overlay>

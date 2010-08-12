@@ -13,7 +13,7 @@
    - for the specific language governing rights and limitations under the
    - License.
    -
-   - The Original Code is AccountProvisioner code.
+   - The Original Code is Account Provisioner code.
    -
    - The Initial Developer of the Original Code is
    - The Mozilla Foundation.
@@ -94,7 +94,7 @@
 
     <div id="notifications">
       <div class="error">
-        <span><span class="username">
+        <span class="username">
         </span><span class="at">@</span><span class="domain">
         </span> is not available.  Here are some available alternatives:</span>
         <ul class="options"/>
@@ -114,14 +114,9 @@
     <div class="message">
       Or do you already have an email account you want to use?
     </div>
-    <button onclick="useExisting();">Use Existing Account</button>
-  </div>
-
-  <div id="addExistingAccount">
-    <iframe id="existing_iframe"
-            src="chrome://messenger/content/accountcreation/emailWizard.xul">
-    </iframe>
-    <button onclick="createNew();">Create New Account</button>
+    <button class="existing"
+            onclick="NewMailAccount(msgWindow, undefined, NewMailAccount);window.close();"
+            >Use Existing Account</button>
   </div>
 
 </body>

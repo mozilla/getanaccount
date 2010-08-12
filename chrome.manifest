@@ -3,3 +3,4 @@ skin      accountprovisioner   classic/1.0   chrome/skin/
 locale    accountprovisioner   en-US         chrome/locale/en-US/
 overlay   chrome://messenger/content/mailWindowOverlay.xul chrome://accountprovisioner/content/mailWindowOverlay.xul
 style     chrome://messenger/content/accountcreation/emailWizard.xul chrome://accountprovisioner/skin/accountCreation.css
+overlay   chrome://messenger/content/accountcreation/emailWizard.xul chrome://accountprovisioner/content/emailWizardOverlay.xul

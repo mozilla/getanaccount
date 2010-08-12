@@ -208,21 +208,7 @@ option .domain {
   padding: 0 0 10px 0;
 }
 
-#addExistingAccount {
-  display: none;
-  border-top: 1px solid #ccc;
-  clear: both;
-  padding: 10px;
-}
-
-#addExistingAccount iframe {
-  width: 600px;
-  height: 280px;
-  overflow: scroll;
-}
-
-#existing button,
-#addExistingAccount button {
+button.existing {
   -moz-border-radius: 5px 5px 5px 5px;
   background-image: -moz-linear-gradient(top, #fafafa 0%, #f2f2f2 100%);
   border: 1px solid #ccc;

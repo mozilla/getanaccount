@@ -11,7 +11,7 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is AccountProvisioner Code.
+ * The Original Code is Account Provisioner Code.
  *
  * The Initial Developer of the Original Code is
  * The Mozilla Foundation.
@@ -41,19 +41,10 @@ var providers = {
   "yahoo.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
 };
 
-var msgWindow;
-
 $(function() {
   // Snarf the things I need out of the window arguments.
+  NewMailAccount = window.arguments[0].NewMailAccount;
   msgWindow = window.arguments[0].msgWindow;
-
-  $("#existing_iframe")[0].contentWindow.arguments = window.arguments;
-  dump("11111: "+$("#existing_iframe")[0]+"\n");
-  for (let i in $("#existing_iframe")[0]) dump("  ."+i+"\n");
-  dump("22222: "+$("#existing_iframe")[0].contentWindow+"\n");
-  for (let i in $("#existing_iframe")[0].contentWindow) dump("  ."+i+"\n");
-  dump("33333: "+$("#existing_iframe")[0].contentDocument+"\n");
-  for (let i in $("#existing_iframe")[0].contentDocument) dump("  ."+i+"\n");
 
   $("#provider").change(function() {
     var domain = $(this).find(":selected").attr("domain");
@@ -111,15 +102,3 @@ $(function() {
   $("#username").focus().select() ;
   $("#existing").fadeIn(3 * 1000);
 });
-
-function useExisting() {
-  $("#window").hide();
-  $("#existing").hide();
-  $("#addExistingAccount").show();
-};
-
-function createNew() {
-  $("#window").show();
-  $("#existing").show();
-  $("#addExistingAccount").hide();
-};
