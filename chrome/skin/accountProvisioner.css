@@ -75,7 +75,8 @@ body {
 }
 
 #entry button.check,
-#notifications button.create {
+#notifications button.create,
+#new_account button.submit {
   font-size: 12px;
   padding: 2px;
   border: 1px solid #4E804D;
@@ -88,6 +89,10 @@ body {
 
 #notifications button.create {
   width: 180px;
+}
+
+#new_account button.submit {
+  width: 19em;
 }
 
 label {
@@ -191,6 +196,13 @@ option .domain {
 }
 
 #go {
+}
+
+#new_account {
+  display: none;
+  border-top: 1px solid #ccc;
+  clear: both;
+  padding: 10px;
 }
 
 #existing {

@@ -62,8 +62,8 @@ $(function() {
   }).trigger('keyup');
 
   $("button.create").click(function() {
-    $("#notifications").show();
-    $("#existing").fadeOut(3 * 1000);
+    $("#window").hide()
+    $("#new_account").fadeIn(3 * 1000);
   });
 
   $("button.check").click(function() {
@@ -98,6 +98,10 @@ $(function() {
     $("#username").val($(this).attr("username")).trigger('keyup');
     $("button.create").effect('highlight', {}, 'slow');
   })
+
+  $("button.submit").click(function() {
+    window.close();
+  });
 
   $("#username").focus().select() ;
   $("#existing").fadeIn(3 * 1000);
