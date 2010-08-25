@@ -43,10 +43,43 @@ var providers = {
 
 var clickableButtons = ["button.create", "button.check", "button.submit"];
 
+/**
+ * Cribbed from
+ *   mozilla/dom/tests/mochitest/localstorage/test_localStorageFromChrome.xhtml
+ */
+function getLocalStorage(page) {
+  var url = "http://example.com/" + page;
+  var ios = Components.classes["@mozilla.org/network/io-service;1"]
+    .getService(Components.interfaces.nsIIOService);
+  var ssm = Components.classes["@mozilla.org/scriptsecuritymanager;1"]
+    .getService(Components.interfaces.nsIScriptSecurityManager);
+  var dsm = Components.classes["@mozilla.org/dom/storagemanager;1"]
+    .getService(Components.interfaces.nsIDOMStorageManager);
+
+  var uri = ios.newURI(url, "", null);
+  var principal = ssm.getCodebasePrincipal(uri);
+  return dsm.getLocalStorageForPrincipal(principal);
+}
+
+function saveState() {
+  var username = $("#username").val();
+  var domain = $("#provider").find(":selected").attr("domain");
+
+  storage.setItem("username", username);
+  storage.setItem("domain", domain);
+}
+
 $(function() {
   // Snarf the things I need out of the window arguments.
   NewMailAccount = window.arguments[0].NewMailAccount;
   msgWindow = window.arguments[0].msgWindow;
+  window.storage = getLocalStorage("accountProvisioner");
+  let username = storage.getItem("username") || $(".username").text();
+  let domain = storage.getItem("domain") || $(".domain").text();
+  $("#username").val(username);
+  $("#provider").find("[domain="+domain+"]").attr("selected", "selected");
+  saveState();
+
 
   $("#provider").change(function() {
     var domain = $(this).find(":selected").attr("domain");
@@ -54,6 +87,7 @@ $(function() {
     $("#notifications .error").hide();
     $("#notifications").hide();
     $(".domain").text(domain);
+    saveState();
   }).change();
 
   $("body").keyup(function(e) {
@@ -75,19 +109,20 @@ $(function() {
     $("#notifications .error").hide();
     $("#notifications").hide();
     $(".username").text($(this).val());
+    saveState();
   }).trigger('keyup');
 
   $("button.create").click(function() {
+    saveState();
     $("#window").hide()
     $("#new_account").fadeIn(3 * 1000);
   });
 
   $("button.check").click(function() {
+    saveState();
     $("#notifications").show();
     var domain = $("#provider").find(":selected").attr("domain");
     var username = $("#username").val();
-    dump("domain="+domain+"\n");
-    dump("username="+username+"\n");
     var handler = providers[domain] +
                   "?domain=" + domain +
                   "&username=" + username;
@@ -116,6 +151,13 @@ $(function() {
   })
 
   $("button.submit").click(function() {
+    saveState();
+    window.close();
+  });
+
+  $("button.existing").click(function() {
+    saveState();
+    NewMailAccount(msgWindow, undefined, NewMailAccount);
     window.close();
   });
 
