@@ -41,6 +41,8 @@ var providers = {
   "yahoo.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
 };
 
+var clickableButtons = ["button.create", "button.check", "button.submit"];
+
 $(function() {
   // Snarf the things I need out of the window arguments.
   NewMailAccount = window.arguments[0].NewMailAccount;
@@ -54,7 +56,21 @@ $(function() {
     $(".domain").text(domain);
   }).change();
 
-  $("#username").keyup(function() {
+  $("body").keyup(function(e) {
+    if (e.keyCode == '13') {
+      e.preventDefault();
+      for (let i in clickableButtons) {
+        if ($(clickableButtons[i]).is(':visible')) {
+          $(clickableButtons[i]).click();
+          break;
+        }
+      }
+    }
+  }).trigger("keyup");
+
+  $("#username").keyup(function(e) {
+    if (e.keyCode == '13')
+      return;
     $("#notifications .success").hide();
     $("#notifications .error").hide();
     $("#notifications").hide();
