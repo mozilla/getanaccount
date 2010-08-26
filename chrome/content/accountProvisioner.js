@@ -39,6 +39,7 @@
 var providers = {
   "gmail.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
   "yahoo.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
+  "latte.ca" : "http://bwinton.latte.ca/work/provision/test.cgi",
 };
 
 var clickableButtons = ["button.create", "button.check", "button.submit"];
@@ -71,13 +72,14 @@ function saveState() {
 
 $(function() {
   // Snarf the things I need out of the window arguments.
-  NewMailAccount = window.arguments[0].NewMailAccount;
-  msgWindow = window.arguments[0].msgWindow;
+  let NewMailAccount = window.arguments[0].NewMailAccount;
+  let msgWindow = window.arguments[0].msgWindow;
   window.storage = getLocalStorage("accountProvisioner");
   let username = storage.getItem("username") || $(".username").text();
   let domain = storage.getItem("domain") || $(".domain").text();
   $("#username").val(username);
   $("#provider").find("[domain="+domain+"]").attr("selected", "selected");
+  $("#provider").change();
   saveState();
 
 
@@ -132,11 +134,11 @@ $(function() {
       }
       else {
         $("#notifications .options").html("");
-        for (let i in data.alternates) {
-          let alt = data.alternates[i]
-          $("#notifications .options").append(
-            "<li username='" + alt + "'>" + alt + "@" + data.domain + "</li>");
-        };
+        for each (let [, address] in Iterator(data.addresses))
+          for each (let [, alt] in Iterator(address.alternates))
+            $("#notifications .options").append(
+              "<li username='" + alt + "' domain='" + address.domain +
+              "'>" + alt + "@" + address.domain + "</li>");
         $("#notifications .error").fadeIn();
       }
     });
@@ -147,7 +149,11 @@ $(function() {
     $("#notifications .error").hide();
     $("#notifications").hide();
     $("#username").val($(this).attr("username")).trigger('keyup');
+    $("#provider").find("[domain="+$(this).attr("domain")+"]")
+                  .attr("selected", "selected");
+    $("#provider").change();
     $("button.create").effect('highlight', {}, 'slow');
+    saveState();
   })
 
   $("button.submit").click(function() {
