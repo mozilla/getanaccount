@@ -36,11 +36,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var providers = {
-  "gmail.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
-  "yahoo.com" : "http://bwinton.latte.ca/work/provision/test.cgi",
-  "latte.ca" : "http://bwinton.latte.ca/work/provision/test.cgi",
-};
+const checkAddress = "http://bwinton.latte.ca/work/provision/checkAddress.cgi";
+const provision = "http://bwinton.latte.ca/work/provision/provision.cgi";
 
 var clickableButtons = ["button.create", "button.check", "button.submit"];
 
@@ -125,9 +122,7 @@ $(function() {
     $("#notifications").show();
     var domain = $("#provider").find(":selected").attr("domain");
     var username = $("#username").val();
-    var handler = providers[domain] +
-                  "?domain=" + domain +
-                  "&username=" + username;
+    var handler = checkAddress + "?domain=" + domain + "&username=" + username;
     $.getJSON(handler, function(data) {
       if (data.succeeded) {
         $("#notifications .success").fadeIn();
