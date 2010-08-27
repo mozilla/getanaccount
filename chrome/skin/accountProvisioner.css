@@ -175,11 +175,11 @@ option .domain {
   display: inline-block;
 }
 
-#notifications .error {
+.error {
   color: red;
 }
 
-#notifications .success {
+.success {
   color: green;
 }
 

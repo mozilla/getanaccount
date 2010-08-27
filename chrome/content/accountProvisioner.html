@@ -116,19 +116,24 @@
   <table>
     <tr><td><span>First name:</span></td>
         <td><input type="text" name="FirstName"
-                   id="FirstName" size="30" value=""/></td></tr>
+                   id="FirstName" size="30" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Last name:</span></td>
         <td><input type="text" name="LastName"
-                   id="LastName" size="30" value=""/></td></tr>
+                   id="LastName" size="30" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Desired Login Name:</span></td>
         <td><input type="text" name="Email"
-                   id="Email" size="30" value=""/></td></tr>
+                   id="Email" size="30" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Password:</span></td>
         <td><input type="password" name="Passwd"
-                   id="Passwd" size="30" value=""/></td></tr>
+                   id="Passwd" size="30" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Re-enter Password:</span></td>
         <td><input type="password" name="PasswdAgain"
-                   id="PasswdAgain" size="30" value=""/></td></tr>
+                   id="PasswdAgain" size="30" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Security Question:</span></td>
         <td><select id="questions" name="selection">
             <option value="choosequestion"
@@ -143,13 +148,16 @@
               >What was your first teacher&#39;s name</option>
             <option value="What is your father&#39;s middle name"
               >What is your father&#39;s middle name</option>
-        </select></td></tr>
+        </select>
+        <span class="error"/></td></tr>
     <tr><td><span>Answer:</span></td>
         <td><input type="text" name="IdentityAnswer"
-                   id="IdentityAnswer" size="53" value=""/></td></tr>
+                   id="IdentityAnswer" size="53" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Recovery email:</span></td>
         <td><input type="text" name="SecondaryEmail"
-                   id="SecondaryEmail" size="53" value=""/></td></tr>
+                   id="SecondaryEmail" size="53" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Location:</span></td>
         <td><select id="loc" name="loc">
             <option value="AF">Afghanistan (افغانستان)</option>
@@ -397,10 +405,12 @@
             <option value="YE">Yemen (اليمن)</option>
             <option value="ZM">Zambia</option>
             <option value="ZW">Zimbabwe</option>
-            </select></td></tr>
+            </select>
+            <span class="error"/></td></tr>
     <tr><td><span>Word Verification:</span></td>
         <td><input type="text" name="newaccountcaptcha"
-                   id="newaccountcaptcha" size="22" value=""/></td></tr>
+                   id="newaccountcaptcha" size="22" value=""/>
+                   <span class="error"/></td></tr>
     <tr><td><span>Terms of Service:</span></td>
         <td>
  <textarea rows="5" cols="80" style="width:100%;text-align:" readonly="readonly" onfocus="this.rows=10">Google Terms of Service
@@ -637,7 +647,8 @@ Welcome to Google!
 
 April 16, 2007
 
-      </textarea></td></tr>
+      </textarea>
+      <span class="error"/></td></tr>
     <tr><td colspan="2">
     <font size="-1">By clicking on 'I accept' below you are agreeing to
       the Terms of Service above and both the Programme Policy and the

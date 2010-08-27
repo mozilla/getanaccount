@@ -153,7 +153,31 @@ $(function() {
 
   $("button.submit").click(function() {
     saveState();
-    window.close();
+    var domain = $("#provider").find(":selected").attr("domain");
+    var username = $("#username").val();
+    var inputs = $("#new_account :input").not("[readonly]").not("button");
+    var handler = provision + "?domain=" + domain + "&username=" + username;
+    dump("Posting!!!\n");
+    $.post(handler, inputs, function(data) {
+      dump("Got reply!!!\n");
+      dump("data="+data+"\n");
+      for (let i in data) dump("  ."+i+"="+data[i]+"\n");
+      if (data.succeeded) {
+        // Create the account using data.config!
+        window.close();
+      }
+      else {
+        for (let i in data.errors) {
+          dump("  ."+i+"\n");
+          // Populate the errors.
+          dump("#new_account #"+i+"\n");
+          dump($("#new_account #"+i).length+"\n");
+          $("#new_account #"+i)
+            .next(".error").text(data.errors[i]);
+        }
+      }
+    }, "json");
+    dump("Done method!!!\n");
   });
 
   $("button.existing").click(function() {
