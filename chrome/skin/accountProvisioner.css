@@ -104,15 +104,18 @@ label {
  #notifications, #go, #existing {
 }
 
-#username {
+input {
   font-weight: bold;
-  text-align: right;
   width: 100%;
   font-size: 12px;
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 3px;
   -moz-border-radius: 5px;
+}
+
+#username {
+  text-align: right;
 }
 
 #provider {
