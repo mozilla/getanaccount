@@ -85,6 +85,7 @@ $(function() {
     $("#notifications .success").hide();
     $("#notifications .error").hide();
     $("#notifications").hide();
+    $(".check").removeClass('clicked');
     $(".domain").text(domain);
     saveState();
   }).change();
@@ -107,6 +108,7 @@ $(function() {
     $("#notifications .success").hide();
     $("#notifications .error").hide();
     $("#notifications").hide();
+    $(".check").removeClass('clicked');
     $(".username").text($(this).val());
     saveState();
   }).trigger('keyup');
@@ -147,6 +149,7 @@ $(function() {
     $("#provider").find("[domain="+$(this).attr("domain")+"]")
                   .attr("selected", "selected");
     $("#provider").change();
+    $("#username").focus();
     $("button.create").effect('highlight', {}, 'slow');
     saveState();
   })
