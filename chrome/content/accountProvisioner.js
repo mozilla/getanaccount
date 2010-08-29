@@ -167,6 +167,12 @@ $(function() {
       for (let i in data) dump("  ."+i+"="+data[i]+"\n");
       if (data.succeeded) {
         // Create the account using data.config!
+        let config = readFromXML(new XML(data.config));
+        let realname = $("#FirstName").val() + " " + $("#LastName").val();
+        let email = username + "@" + domain;
+        let password = $("#Passwd").val();
+        replaceVariables(config, realname, email, password);
+        createAccountInBackend(config);
         window.close();
       }
       else {
