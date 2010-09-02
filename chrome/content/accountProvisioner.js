@@ -42,8 +42,13 @@ const provision = "http://bwinton.latte.ca/work/provision/provision.cgi";
 var clickableButtons = ["button.create", "button.check", "button.submit"];
 
 /**
+ * Get the localstorage for this page in a way that works in chrome.
+ *
  * Cribbed from
  *   mozilla/dom/tests/mochitest/localstorage/test_localStorageFromChrome.xhtml
+ *
+ * @param {String} page The page to get the localstorage for.
+ * @return {nsIDOMStorage} The localstorage for this page.
  */
 function getLocalStorage(page) {
   var url = "http://example.com/" + page;
@@ -75,7 +80,7 @@ $(function() {
   let username = storage.getItem("username") || $(".username").text();
   let domain = storage.getItem("domain") || $(".domain").text();
   $("#username").val(username);
-  $("#provider").find("[domain="+domain+"]").attr("selected", "selected");
+  $("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
   $("#provider").change();
   saveState();
 
@@ -115,7 +120,7 @@ $(function() {
 
   $("button.create").click(function() {
     saveState();
-    $("#window").hide()
+    $("#window").hide();
     $("#new_account").fadeIn(3 * 1000);
   });
 

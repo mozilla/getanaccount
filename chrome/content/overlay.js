@@ -40,6 +40,6 @@ function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
   window.openDialog("chrome://accountprovisioner/content/accountProvisioner.html",
                     "AccountSetup",
                     "chrome,titlebar,centerscreen,width=640,height=320",
-                    {msgWindow:aMsgWindow,
-                     NewMailAccount:aNewMailAccount});
+                    {msgWindow: aMsgWindow,
+                      NewMailAccount: aNewMailAccount});
 }
