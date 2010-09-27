@@ -36,9 +36,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-const checkAddress = "http://bwinton.latte.ca/work/provision/checkAddress.cgi";
-const provision = "http://bwinton.latte.ca/work/provision/provision.cgi";
-
 var clickableButtons = ["button.create", "button.check", "button.submit"];
 
 /**
@@ -77,6 +74,16 @@ $(function() {
   let NewMailAccount = window.arguments[0].NewMailAccount;
   let msgWindow = window.arguments[0].msgWindow;
   window.storage = getLocalStorage("accountProvisioner");
+
+  var prefs = Cc["@mozilla.org/preferences-service;1"]
+                .getService(Ci.nsIPrefBranch);
+  dump("\n\n\n\nXXXXXXXXXXXXXXXX\n");
+  dump("prefs="+prefs+"\n");
+  var checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
+  dump("checkAddress="+checkAddress+"\n");
+  var provision = prefs.getCharPref("extensions.accountprovisioner.provision");
+  dump("provision="+provision+"\n");
+
   let username = storage.getItem("username") || $(".username").text();
   let domain = storage.getItem("domain") || $(".domain").text();
   $("#username").val(username);
