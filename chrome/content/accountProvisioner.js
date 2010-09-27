@@ -77,12 +77,8 @@ $(function() {
 
   var prefs = Cc["@mozilla.org/preferences-service;1"]
                 .getService(Ci.nsIPrefBranch);
-  dump("\n\n\n\nXXXXXXXXXXXXXXXX\n");
-  dump("prefs="+prefs+"\n");
   var checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
-  dump("checkAddress="+checkAddress+"\n");
   var provision = prefs.getCharPref("extensions.accountprovisioner.provision");
-  dump("provision="+provision+"\n");
 
   let username = storage.getItem("username") || $(".username").text();
   let domain = storage.getItem("domain") || $(".domain").text();
@@ -104,6 +100,7 @@ $(function() {
 
   $("body").keyup(function(e) {
     if (e.keyCode == '13') {
+      // Handle the return key.
       e.preventDefault();
       for (let i in clickableButtons) {
         if ($(clickableButtons[i]).is(':visible')) {
@@ -111,6 +108,10 @@ $(function() {
           break;
         }
       }
+    }
+    else if (e.keyCode == '87' && e.ctrlKey && !e.altKey) {
+      // Handle Ctrl-W.
+      window.close();
     }
   }).trigger("keyup");
 
@@ -207,6 +208,6 @@ $(function() {
     window.close();
   });
 
-  $("#username").focus().select() ;
+  $("#name").focus().select();
   $("#existing").fadeIn(3 * 1000);
 });

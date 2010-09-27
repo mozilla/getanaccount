@@ -65,11 +65,14 @@ body {
   margin: 0 0 10px 0;
 }
 
+#entry > div {
+  margin: 0 10px;
+}
+
 #entry .chooseName,
 #entry .chooseDomain,
 #entry .checkAvailability {
   width: 180px;
-  margin: 0 10px;
   display: inline-block;
   float: left;
 }
