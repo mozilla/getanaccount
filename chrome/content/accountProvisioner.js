@@ -62,9 +62,11 @@ function getLocalStorage(page) {
 }
 
 function saveState() {
+  var name = $("#name").val();
   var username = $("#username").val();
   var domain = $("#provider").find(":selected").attr("domain");
 
+  storage.setItem("name", name);
   storage.setItem("username", username);
   storage.setItem("domain", domain);
 }
@@ -81,8 +83,10 @@ $(function() {
   var checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
   var provision = prefs.getCharPref("extensions.accountprovisioner.provision");
 
+  let name = storage.getItem("name") || $("#name").text();
   let username = storage.getItem("username") || $(".username").text();
   let domain = storage.getItem("domain") || $(".domain").text();
+  $("#name").val(name);
   $("#username").val(username);
   $("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
   $("#provider").change();
