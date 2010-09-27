@@ -77,6 +77,7 @@ $(function() {
 
   var prefs = Cc["@mozilla.org/preferences-service;1"]
                 .getService(Ci.nsIPrefBranch);
+  var suggestFromName = prefs.getCharPref("extensions.accountprovisioner.suggestFromName");
   var checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
   var provision = prefs.getCharPref("extensions.accountprovisioner.provision");
 
@@ -114,6 +115,23 @@ $(function() {
       window.close();
     }
   }).trigger("keyup");
+
+  $("#name").change(function(e) {
+    var name = $("#name").val().split(" ");
+    var firstname = name[0];
+    var lastname = name.slice(1).join(" ");
+    var handler = suggestFromName + "?FirstName=" + firstname + "&LastName=" + lastname;
+    $.getJSON(handler, function(data) {
+      dump("Called '"+handler+"'.\n");
+      dump("  got data:"+$.dump(data)+"\n");
+      if (data.succeeded) {
+        // Figure out what to do if it worked.
+      }
+      else {
+        // Figure out what to do if it failed.
+      }
+    });
+  });
 
   $("#username").keyup(function(e) {
     if (e.keyCode == '13')
