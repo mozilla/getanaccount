@@ -55,6 +55,10 @@ body {
 
 .message {
   padding: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   font-weight: bold;
 }
 
@@ -69,10 +73,23 @@ body {
   margin: 0 10px;
 }
 
+#entry .enterName label,
 #entry .chooseName,
 #entry .chooseDomain,
 #entry .checkAvailability {
   width: 180px;
+  display: inline-block;
+  float: left;
+}
+
+#entry .enterName label {
+  margin-top: 5px;
+}
+
+#name {
+  margin: 5px;
+  margin-left: 20px;
+  width: 380px;
   display: inline-block;
   float: left;
 }
@@ -92,6 +109,8 @@ body {
 
 #notifications button.create {
   width: 180px;
+  float: right;
+  padding-top: 3px;
 }
 
 #new_account button.submit {
@@ -102,9 +121,6 @@ label {
   display: block;
   color: #444;
   font-size: 14px;
-}
-
- #notifications, #go, #existing {
 }
 
 input {
@@ -141,17 +157,6 @@ option .domain {
 
 #preview {
   text-align: -moz-center;
-}
-
-#name {
-  color: #666;
-}
-
-#name:after {
-  content: ": ";
-}
-
-.at {
 }
 
 #notifications {

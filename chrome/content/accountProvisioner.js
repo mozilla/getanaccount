@@ -91,8 +91,7 @@ $(function() {
 
   $("#provider").change(function() {
     var domain = $(this).find(":selected").attr("domain");
-    $("#notifications .success").hide();
-    $("#notifications .error").hide();
+    $("#notifications > div").hide();
     $("#notifications").hide();
     $(".check").removeClass('clicked');
     $(".domain").text(domain);
@@ -122,13 +121,17 @@ $(function() {
     var lastname = name.slice(1).join(" ");
     var handler = suggestFromName + "?FirstName=" + firstname + "&LastName=" + lastname;
     $.getJSON(handler, function(data) {
-      dump("Called '"+handler+"'.\n");
-      dump("  got data:"+$.dump(data)+"\n");
+      let alternates = $("#alternates");
+      alternates.html("");
       if (data.succeeded) {
-        // Figure out what to do if it worked.
+        alternates.append("<option address='' selected='true'>No, thanks!</option>");
+        for each (let [, address] in Iterator(data.addresses))
+          alternates.append("<option address='" + address + "'>" + address + "</option>");
+        $("#notifications .personals").show();
       }
       else {
         // Figure out what to do if it failed.
+        $("#notifications .personals").hide();
       }
     });
   });
@@ -136,8 +139,7 @@ $(function() {
   $("#username").keyup(function(e) {
     if (e.keyCode == '13')
       return;
-    $("#notifications .success").hide();
-    $("#notifications .error").hide();
+    $("#notifications > div").hide();
     $("#notifications").hide();
     $(".check").removeClass('clicked');
     $(".username").text($(this).val());
@@ -173,8 +175,7 @@ $(function() {
   });
 
   $(".options").delegate("li", "click", function() {
-    $("#notifications .success").hide();
-    $("#notifications .error").hide();
+    $("#notifications > div").hide();
     $("#notifications").hide();
     $("#username").val($(this).attr("username")).trigger('keyup');
     $("#provider").find("[domain="+$(this).attr("domain")+"]")
@@ -191,11 +192,7 @@ $(function() {
     var username = $("#username").val();
     var inputs = $("#new_account :input").not("[readonly]").not("button");
     var handler = provision + "?domain=" + domain + "&username=" + username;
-    dump("Posting!!!\n");
     $.post(handler, inputs, function(data) {
-      dump("Got reply!!!\n");
-      dump("data="+data+"\n");
-      for (let i in data) dump("  ."+i+"="+data[i]+"\n");
       if (data.succeeded) {
         // Create the account using data.config!
         let config = readFromXML(new XML(data.config));
@@ -208,16 +205,12 @@ $(function() {
       }
       else {
         for (let i in data.errors) {
-          dump("  ."+i+"\n");
           // Populate the errors.
-          dump("#new_account #"+i+"\n");
-          dump($("#new_account #"+i).length+"\n");
           $("#new_account #"+i)
             .next(".error").text(data.errors[i]);
         }
       }
     }, "json");
-    dump("Done method!!!\n");
   });
 
   $("button.existing").click(function() {

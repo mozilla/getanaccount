@@ -79,20 +79,18 @@
   </script>
 </head>
 <body>
-
   <div id="window">
     <!-- Check for the availability of a new account. -->
-
     <div class="message">
       Create a new email account for Thunderbird?
     </div>
 
     <div id="entry">
-
       <div class="enterName">
         <label for="name">0. Type your name:</label>
         <input type="text" id="name" name="name" value="your name"/>
       </div>
+      <br clear="all"/>
 
       <div class="chooseName">
         <label for="username">1. Choose username:</label>
@@ -128,7 +126,13 @@
         <span>Awesome! <span class="username">
         </span><span class="at">@</span><span class="domain">
         </span> is available.</span>
+        <span class="personals">
+          <label for="alternates">I would also like to add the following
+          address to my account for $20/year:</label>
+          <select id="alternates"></select>
+        </span>
         <button class="create">Continue</button>
+
       </div>
     </div>
 
