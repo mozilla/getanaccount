@@ -77,11 +77,31 @@ $(function() {
   let msgWindow = window.arguments[0].msgWindow;
   window.storage = getLocalStorage("accountProvisioner");
 
-  var prefs = Cc["@mozilla.org/preferences-service;1"]
+  let prefs = Cc["@mozilla.org/preferences-service;1"]
                 .getService(Ci.nsIPrefBranch);
-  var suggestFromName = prefs.getCharPref("extensions.accountprovisioner.suggestFromName");
-  var checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
-  var provision = prefs.getCharPref("extensions.accountprovisioner.provision");
+  let suggestFromName = prefs.getCharPref("extensions.accountprovisioner.suggestFromName");
+  let checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
+  let provision = prefs.getCharPref("extensions.accountprovisioner.provision");
+
+  let pref_name = "geo.wifi.protocol";
+  if (!prefs.prefHasUserValue(pref_name))
+    prefs.setIntPref(pref_name, 0);
+  pref_name = "geo.wifi.uri";
+  if (!prefs.prefHasUserValue(pref_name))
+    prefs.setCharPref(pref_name, "https://www.google.com/loc/json");
+
+  var geolocation = Cc["@mozilla.org/geolocation;1"]
+                      .getService(Ci.nsIDOMGeoGeolocation);
+  geolocation.getCurrentPosition(
+    function ht_gotPosition(position) {
+      // If the user hasn't picked something already,
+      // choose the country they're in.
+      if (!$("#loc option:selected").val())
+        $("#loc").val(position.address.countryCode);
+    },
+    function ht_gotError(e) {
+      log("GeoError: " + e.code + ": " + e.message);
+    });
 
   let name = storage.getItem("name") || $("#name").text();
   let username = storage.getItem("username") || $(".username").text();
@@ -89,7 +109,6 @@ $(function() {
   $("#name").val(name);
   $("#username").val(username);
   $("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
-  $("#provider").change();
   saveState();
 
 
@@ -121,8 +140,10 @@ $(function() {
 
   $("#name").change(function(e) {
     var name = $("#name").val().split(" ");
-    var firstname = name[0];
-    var lastname = name.slice(1).join(" ");
+    var firstname = name.slice(0, name.length - 1).join(" ");
+    var lastname = name[name.length - 1];
+    $("#FirstName").val(firstname);
+    $("#LastName").val(lastname);
     var handler = suggestFromName + "?FirstName=" + firstname + "&LastName=" + lastname;
     $.getJSON(handler, function(data) {
       let alternates = $("#alternates");
@@ -138,7 +159,7 @@ $(function() {
         $("#notifications .personals").hide();
       }
     });
-  });
+  }).change();
 
   $("#username").keyup(function(e) {
     if (e.keyCode == '13')
