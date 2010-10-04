@@ -144,8 +144,9 @@ $(function() {
     var lastname = name[name.length - 1];
     $("#FirstName").val(firstname);
     $("#LastName").val(lastname);
-    var handler = suggestFromName + "?FirstName=" + firstname + "&LastName=" + lastname;
-    $.getJSON(handler, function(data) {
+    $.getJSON(suggestFromName,
+              {"FirstName": firstname, "LastName": lastname},
+              function(data) {
       let alternates = $("#alternates");
       alternates.html("");
       if (data.succeeded) {
@@ -182,8 +183,9 @@ $(function() {
     $("#notifications").show();
     var domain = $("#provider").find(":selected").attr("domain");
     var username = $("#username").val();
-    var handler = checkAddress + "?domain=" + domain + "&username=" + username;
-    $.getJSON(handler, function(data) {
+    $.getJSON(checkAddress,
+              {"domain": domain, "username": username},
+              function(data) {
       if (data.succeeded) {
         $("#notifications .success").fadeIn();
       }
@@ -216,8 +218,9 @@ $(function() {
     var domain = $("#provider").find(":selected").attr("domain");
     var username = $("#username").val();
     var inputs = $("#new_account :input").not("[readonly]").not("button");
-    var handler = provision + "?domain=" + domain + "&username=" + username;
-    $.post(handler, inputs, function(data) {
+    inputs.domain = domain;
+    inputs.username = username;
+    $.post(provision, inputs, function(data) {
       if (data.succeeded) {
         // Create the account using data.config!
         let config = readFromXML(new XML(data.config));
