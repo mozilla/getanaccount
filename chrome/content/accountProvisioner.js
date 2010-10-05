@@ -149,7 +149,6 @@ $(function() {
               function(data) {
       let alternates = $("#alternates").empty();
       if (data.succeeded) {
-        $("span.email").text(data.addresses[0]);
         let cost = 20;
         for each (let [i, address] in Iterator(data.addresses)) {
           alternates.append($("<li class='address'></li>").data("address", address).append($("<span class='address'/>").text(address),
