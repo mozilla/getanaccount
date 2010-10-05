@@ -36,7 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var clickableButtons = ["button.create", "button.check", "button.submit"];
+var clickableButtons = ["button.create", "button.search", "button.submit"];
 
 /**
  * Get the localstorage for this page in a way that works in chrome.
@@ -62,11 +62,13 @@ function getLocalStorage(page) {
 }
 
 function saveState() {
-  var name = $("#name").val();
+  var firstname = $("#FirstName").val();
+  var lastname = $("#LastName").val();
   var username = $("#username").val();
   var domain = $("#provider").find(":selected").attr("domain");
 
-  storage.setItem("name", name);
+  storage.setItem("firstname", firstname);
+  storage.setItem("lastname", lastname);
   storage.setItem("username", username);
   storage.setItem("domain", domain);
 }
@@ -103,12 +105,14 @@ $(function() {
       log("GeoError: " + e.code + ": " + e.message);
     });
 
-  let name = storage.getItem("name") || $("#name").text();
-  let username = storage.getItem("username") || $(".username").text();
-  let domain = storage.getItem("domain") || $(".domain").text();
-  $("#name").val(name);
-  $("#username").val(username);
-  $("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
+  let firstname = storage.getItem("firstname") || $("#FirstName").text();
+  let lastname = storage.getItem("lastname") || $("#LastName").text();
+  let username = storage.getItem("username");
+  let domain = storage.getItem("domain");
+  $("#FirstName").val(firstname);
+  $("#LastName").val(lastname);
+  //$("#username").val(username);
+  //$("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
   saveState();
 
 
@@ -122,59 +126,50 @@ $(function() {
   }).change();
 
   $("body").keyup(function(e) {
-    if (e.keyCode == '13') {
-      // Handle the return key.
-      e.preventDefault();
-      for (let i in clickableButtons) {
-        if ($(clickableButtons[i]).is(':visible')) {
-          $(clickableButtons[i]).click();
-          break;
-        }
-      }
-    }
-    else if (e.keyCode == '87' && e.ctrlKey && !e.altKey) {
+    if (e.keyCode == '87' && ((e.ctrlKey && !e.altKey) || e.metaKey)) {
       // Handle Ctrl-W.
       window.close();
     }
   }).trigger("keyup");
 
-  $("#name").change(function(e) {
-    var name = $("#name").val().split(" ");
-    var firstname = name.slice(0, name.length - 1).join(" ");
-    var lastname = name[name.length - 1];
-    $("#FirstName").val(firstname);
-    $("#LastName").val(lastname);
+  $(".search").click(function() {
+    saveState();
+    var firstname = $("#FirstName").val();
+    var lastname = $("#LastName").val();
+    if (firstname.length <= 0) {
+      $("#FirstName").select().focus();
+      return;
+    }
+    if (lastname.length <= 0) {
+      $("#LastName").select().focus();
+      return;
+    }
     $.getJSON(suggestFromName,
               {"FirstName": firstname, "LastName": lastname},
               function(data) {
-      let alternates = $("#alternates");
-      alternates.html("");
+      let alternates = $("#alternates").empty();
       if (data.succeeded) {
-        alternates.append("<option address='' selected='true'>No, thanks!</option>");
-        for each (let [, address] in Iterator(data.addresses))
-          alternates.append("<option address='" + address + "'>" + address + "</option>");
-        $("#notifications .personals").show();
+        $("span.email").text(data.addresses[0]);
+        let cost = 20;
+        for each (let [i, address] in Iterator(data.addresses)) {
+          alternates.append($("<li class='address'></li>").data("address", address).append($("<span class='address'/>").text(address),
+                                                                                           $("<button class='create'/>").text("$" + (cost + i*2) + "/ year")));
+        }
+        $("#notifications .success").show();
       }
       else {
         // Figure out what to do if it failed.
-        $("#notifications .personals").hide();
+        $("#notifications .error").fadeIn();
       }
     });
-  }).change();
+  });
 
-  $("#username").keyup(function(e) {
-    if (e.keyCode == '13')
-      return;
-    $("#notifications > div").hide();
-    $("#notifications").hide();
-    $(".check").removeClass('clicked');
-    $(".username").text($(this).val());
+  $("#notifications").delegate("button.create", "click", function() {
     saveState();
-  }).trigger('keyup');
-
-  $("button.create").click(function() {
-    saveState();
-    $("#window").hide();
+    $("#chosen_email").text($(this).parent().data("address"));
+    $("#FirstNameAccount").val($("#FirstName").val());
+    $("#LastNameAccount").val($("#LastName").val());
+    $("#window, #existing").hide();
     $("#new_account").fadeIn(3 * 1000);
   });
 
@@ -215,17 +210,13 @@ $(function() {
 
   $("button.submit").click(function() {
     saveState();
-    var domain = $("#provider").find(":selected").attr("domain");
-    var username = $("#username").val();
     var inputs = $("#new_account :input").not("[readonly]").not("button");
-    inputs.domain = domain;
-    inputs.username = username;
     $.post(provision, inputs, function(data) {
       if (data.succeeded) {
         // Create the account using data.config!
         let config = readFromXML(new XML(data.config));
         let realname = $("#FirstName").val() + " " + $("#LastName").val();
-        let email = username + "@" + domain;
+        let email = $("#chosen_email").text();
         let password = $("#Passwd").val();
         replaceVariables(config, realname, email, password);
         createAccountInBackend(config);
@@ -247,6 +238,6 @@ $(function() {
     window.close();
   });
 
-  $("#name").focus().select();
+  $("#FirstName").focus().select();
   $("#existing").fadeIn(3 * 1000);
 });

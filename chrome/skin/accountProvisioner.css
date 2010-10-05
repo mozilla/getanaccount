@@ -41,49 +41,25 @@
 }
 
 body {
-  font-family: lucida grande;
-  font-size: 14px;
-  line-height: 24px;
+  margin: 10px;
 }
 
-#window {
-  margin: 20px auto;
-  border: 1px solid #ccc;
-  background-color: #fafafa;
-  height: auto;
+#window .message {
+  margin-bottom: 10px;
 }
 
-.message {
-  padding: 10px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  font-weight: bold;
+#window .message a {
+  color: #0066dd;
+  text-decoration: underline;
 }
 
-#entry {
-  position: relative;
-  display: block;
-  float: left;
-  margin: 0 0 10px 0;
+#search {
+  margin: 7px 0;
 }
 
-#entry > div {
-  margin: 0 10px;
-}
-
-#entry .enterName label,
-#entry .chooseName,
-#entry .chooseDomain,
-#entry .checkAvailability {
-  width: 180px;
+#search .entry {
   display: inline-block;
-  float: left;
-}
-
-#entry .enterName label {
-  margin-top: 5px;
+  width: 32%;
 }
 
 #name {
@@ -94,23 +70,37 @@ body {
   float: left;
 }
 
-#entry button.check,
+#search .search,
 #notifications button.create,
 #new_account button.submit {
-  font-size: 12px;
   padding: 2px;
-  border: 1px solid #4E804D;
-  -moz-border-radius: 5px;
-  width: 100%;
-  background-image: -moz-linear-gradient(center top , #67B364 0%, #55A152 100%);
-  color: #fff;
+  outline: 1px solid #B8BDC1;
+  border: 2px solid #EBEDEE;
+  -moz-border-radius: 3px;
+  -moz-outline-radius: 3px;
+  background-image: -moz-linear-gradient(center top , #fff 0%, #fff 50%, #EDF4F9 50%, #EDF4F9 100%);
+  text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+  color: #333;
   font-weight: bold;
 }
 
+#search .search:hover,
+#notifications button.create:hover {
+  outline-color: #BAC1B9;
+  border-color: #DDE8DA;
+  background-image: -moz-linear-gradient(center top , #ECF6EB 0%, #ECF6EB 50%, #D2E4CC 50%, #D2E4CC 100%);
+}
+
+#search .search:active,
+#notifications button.create:active {
+  outline-color: #BAC1B9;
+  border-color: #C9D5C8;
+  background-image: -moz-linear-gradient(center top , #DEE7DE 0%, #DEE7DE 50%, #B4C4B1 50%, #B4C4B1 100%);
+}
+
 #notifications button.create {
-  width: 180px;
-  float: right;
-  padding-top: 3px;
+  font-size: x-small;
+  font-weight: normal;
 }
 
 #new_account button.submit {
@@ -119,18 +109,20 @@ body {
 
 label {
   display: block;
-  color: #444;
-  font-size: 14px;
+  color: graytext;
+  font-size: small;
 }
 
-input {
-  font-weight: bold;
-  width: 100%;
-  font-size: 12px;
+input[type="text"],
+input[type="password"],
+textarea {
+  font: 1em sans-serif;
+  -moz-box-shadow: inset 2px 2px 1px #ccc;
+  padding: 4px;
   background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 3px;
-  -moz-border-radius: 5px;
+  color: -moz-dialogtext;
+  border: 1px solid #B8BDC1;
+  -moz-border-radius: 1px;
 }
 
 #username {
@@ -155,35 +147,12 @@ option .domain {
   color: #444;
 }
 
-#preview {
-  text-align: -moz-center;
-}
-
-#notifications {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid transparent;
-  background-image: -moz-linear-gradient(top, #e6e6e6 0%, #f2f2f2 5px, #f2f2f2 100%);
-  background-color: #f2f2f2;
-  clear: both;
-  margin: auto;
-  display: none;
-  line-height: 18px;
-  float: left;
-  width: 100%;
-}
-
-#notifications > div {
-  display: none;
-  text-align: left;
-  margin: 10px;
-}
-
 #notifications .error,
 #notifications .success {
-  /* width: 380px; */
   padding-top: 5px;
+  margin: 10px;
   float: left;
-  display: inline-block;
+  display: none;
 }
 
 .error {
@@ -192,6 +161,36 @@ option .domain {
 
 .success {
   color: green;
+}
+
+#alternates {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#alternates li.address {
+  width: 100%;
+  display: -moz-box;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  padding: 3px;
+}
+
+#alternates li.address:first-child {
+  -moz-border-radius: 3px 3px 0 0;
+}
+
+#alternates li.address:last-child {
+  border-bottom: 1px solid #aaa;
+  -moz-border-radius: 0 0 3px 3px;
+}
+
+#alternates li.address span.address {
+  display: -moz-box;
+  -moz-box-flex: 1;
+  width: 100%;
 }
 
 #notifications ul.options {
@@ -206,51 +205,60 @@ option .domain {
   cursor: pointer;
 }
 
-#go {
-}
-
 #new_account {
   display: none;
-  border-top: 1px solid #ccc;
-  clear: both;
   padding: 10px;
+}
+
+#chosen_email {
+  text-align: center;
+  font-weight: bold;
 }
 
 #existing {
   display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
   border-top: 1px solid #ccc;
-  clear: both;
   padding: 10px;
+  width: 100%;
+  font-size: small;
+  color: graytext;
+  opacity: 0.9;
 }
 
-#existing * {
+#existing:hover,
+#existing:hover button.existing {
+  color: #222;
+  opacity: 1.0;
 }
 
-#existing .message {
-  margin: 0;
-  padding: 0 0 10px 0;
+#existing button.existing {
+  font-size: small;
+  padding: 2px 2em;
+  outline: 1px solid #B8BDC1;
+  border: 2px solid #EBEDEE;
+  -moz-border-radius: 3px;
+  -moz-outline-radius: 3px;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+  color: graytext;
+  float: right;
 }
 
-button.existing {
-  -moz-border-radius: 5px 5px 5px 5px;
-  background-image: -moz-linear-gradient(top, #fafafa 0%, #f2f2f2 100%);
-  border: 1px solid #ccc;
-  color: #000;
-  font-size: 12px;
-  padding: 2px;
-  width: 180px;
-  margin-left: -90px;
-  left: 50%;
-  position: relative;
+#existing:hover button.existing {
+  background-image: -moz-linear-gradient(center top , #fff 0%, #fff 50%, #EDF4F9 50%, #EDF4F9 100%);
 }
 
-#entry button.check.clicked {
-  background-image: -moz-linear-gradient(top, #fafafa 0%, #f2f2f2 100%);
-  border: 1px solid #ccc;
-  color: #000;
-  font-size: 12px;
-  padding: 2px;
-  font-weight: normal;
+#existing button.existing:hover {
+  outline-color: #BAC1B9;
+  border-color: #DDE8DA;
+  background-image: -moz-linear-gradient(center top , #ECF6EB 0%, #ECF6EB 50%, #D2E4CC 50%, #D2E4CC 100%);
 }
 
+#existing button.existing:active {
+  outline-color: #BAC1B9;
+  border-color: #C9D5C8;
+  background-image: -moz-linear-gradient(center top , #DEE7DE 0%, #DEE7DE 50%, #B4C4B1 50%, #B4C4B1 100%);
+}
 
