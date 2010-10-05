@@ -208,6 +208,13 @@ $(function() {
     saveState();
   })
 
+  $("#back").click(function() {
+    $("#FirstName").val($("#FirstNameAccount").val());
+    $("#LastName").val($("#LastNameAccount").val());
+    $("#window, #existing").show();
+    $("#new_account").hide();
+  });
+
   $("button.submit").click(function() {
     saveState();
     var inputs = $("#new_account :input").not("[readonly]").not("button");

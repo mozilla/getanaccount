@@ -72,7 +72,7 @@ body {
 
 #search .search,
 #notifications button.create,
-#new_account button.submit {
+#new_account button {
   padding: 2px;
   outline: 1px solid #B8BDC1;
   border: 2px solid #EBEDEE;
@@ -103,7 +103,7 @@ body {
   font-weight: normal;
 }
 
-#new_account button.submit {
+#new_account button {
   width: 19em;
 }
 
