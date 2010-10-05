@@ -150,9 +150,11 @@ $(function() {
       let alternates = $("#alternates").empty();
       if (data.succeeded) {
         let cost = 20;
+        $("span.cost").text("$" + cost + "/year");
         for each (let [i, address] in Iterator(data.addresses)) {
-          alternates.append($("<li class='address'></li>").data("address", address).append($("<span class='address'/>").text(address),
-                                                                                           $("<button class='create'/>").text("$" + (cost + i*2) + "/ year")));
+          alternates.append($("<li class='address'/>").data("address", address)
+                              .append($("<span class='address'/>").text(address),
+                              $("<button class='create'/>").html("➡")));
         }
         $("#notifications .success").show();
       }
