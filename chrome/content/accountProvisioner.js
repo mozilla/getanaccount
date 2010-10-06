@@ -218,26 +218,39 @@ $(function() {
 
   $("button.submit").click(function() {
     saveState();
+    let realname = $("#FirstName").val() + " " + $("#LastName").val();
+    let password = $("#Passwd").val();
+    let email = $("#chosen_email").text();
+
     var inputs = $("#new_account :input").not("[readonly]").not("button");
-    $.post(provision, inputs, function(data) {
-      if (data.succeeded) {
-        // Create the account using data.config!
-        let config = readFromXML(new XML(data.config));
-        let realname = $("#FirstName").val() + " " + $("#LastName").val();
-        let email = $("#chosen_email").text();
-        let password = $("#Passwd").val();
-        replaceVariables(config, realname, email, password);
-        createAccountInBackend(config);
-        window.close();
-      }
-      else {
-        for (let i in data.errors) {
-          // Populate the errors.
-          $("#new_account #"+i)
-            .next(".error").text(data.errors[i]);
-        }
-      }
-    }, "json");
+    var data = {}
+    inputs.each(function(index, value) {
+      data[$(value).attr("name")] = $(value).attr("value");
+    });
+    data.email = email;
+
+    $.ajax({url: provision,
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            contentType: 'text/json',
+            data: JSON.stringify(data),
+            success: function(data) {
+              if (data.succeeded) {
+                // Create the account using data.config!
+                let config = readFromXML(new XML(data.config));
+                replaceVariables(config, realname, email, password);
+                createAccountInBackend(config);
+                window.close();
+              }
+              else {
+                for (let i in data.errors) {
+                  // Populate the errors.
+                  $("#new_account #"+i)
+                    .next(".error").text(data.errors[i]);
+                }
+              }
+            }});
   });
 
   $("button.existing").click(function() {
