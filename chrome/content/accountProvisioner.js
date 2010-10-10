@@ -61,6 +61,10 @@ function getLocalStorage(page) {
   return dsm.getLocalStorageForPrincipal(principal);
 }
 
+/**
+ * Save the state of this page to localstorage, so we can reconstitute it
+ * later.
+ **/
 function saveState() {
   var firstname = $("#FirstName").val();
   var lastname = $("#LastName").val();
@@ -72,6 +76,34 @@ function saveState() {
   storage.setItem("username", username);
   storage.setItem("domain", domain);
 }
+
+/**
+ * Turn a set of inputs with dotted names into an object with sub-objects.
+ *
+ * @param {jQuery Collection} inputs The inputs to convert.
+ * @return {object} An object containing all the inputs.
+ **/
+function objectify(inputs) {
+  var rv = {}
+  inputs.each(function(index, value) {
+    var key = $(value).attr("name").split(".");
+    var value = $(value).attr("value");
+    var obj = rv;
+    for (var i in key) {
+      var part = key[i];
+      if (!(part in obj))
+        obj[part] = {};
+
+      if (i < key.length-1)
+        obj = obj[part];
+      else
+        obj[part] = value;
+    }
+  });
+  return rv;
+}
+
+var storedData = {};
 
 $(function() {
   // Snarf the things I need out of the window arguments.
@@ -98,8 +130,8 @@ $(function() {
     function ht_gotPosition(position) {
       // If the user hasn't picked something already,
       // choose the country they're in.
-      if (!$("#loc option:selected").val())
-        $("#loc").val(position.address.countryCode);
+      if (!$("#country option:selected").val())
+        $("#country").val(position.address.countryCode);
     },
     function ht_gotError(e) {
       log("GeoError: " + e.code + ": " + e.message);
@@ -149,14 +181,17 @@ $(function() {
               function(data) {
       let alternates = $("#alternates").empty();
       if (data.succeeded) {
-        let cost = 20;
-        $("span.cost").text("$" + cost + "/year");
+        $("span.cost").text("$" + data.price + "/year");
         for each (let [i, address] in Iterator(data.addresses)) {
           alternates.append($("<li class='address'/>").data("address", address)
                               .append($("<span class='address'/>").text(address),
                               $("<button class='create'/>").html("➡")));
         }
         $("#notifications .success").show();
+        storedData = data;
+        delete storedData.succeeded
+        delete storedData.addresses
+        delete storedData.price
       }
       else {
         // Figure out what to do if it failed.
@@ -168,8 +203,8 @@ $(function() {
   $("#notifications").delegate("button.create", "click", function() {
     saveState();
     $("#chosen_email").text($(this).parent().data("address"));
-    $("#FirstNameAccount").val($("#FirstName").val());
-    $("#LastNameAccount").val($("#LastName").val());
+    $("#account\\.first_name").val($("#FirstName").val());
+    $("#account\\.last_name").val($("#LastName").val());
     $("#window, #existing").hide();
     $("#new_account").fadeIn(3 * 1000);
   });
@@ -210,8 +245,8 @@ $(function() {
   })
 
   $("#back").click(function() {
-    $("#FirstName").val($("#FirstNameAccount").val());
-    $("#LastName").val($("#LastNameAccount").val());
+    $("#FirstName").val($("#account\\.first_name").val());
+    $("#LastName").val($("#account\\.last_name").val());
     $("#window, #existing").show();
     $("#new_account").hide();
   });
@@ -219,15 +254,17 @@ $(function() {
   $("button.submit").click(function() {
     saveState();
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
-    let password = $("#Passwd").val();
     let email = $("#chosen_email").text();
 
     var inputs = $("#new_account :input").not("[readonly]").not("button");
-    var data = {}
-    inputs.each(function(index, value) {
-      data[$(value).attr("name")] = $(value).attr("value");
-    });
-    data.email = email;
+
+    // Then add the information from this page.
+    var data = objectify(inputs);
+
+    data.items = [{"address": email}];
+    // Populate the item from the stored data.
+    for (let i in storedData)
+      data.items[0][i] = storedData[i];
 
     $.ajax({url: provision,
             type: 'POST',
@@ -238,6 +275,7 @@ $(function() {
             success: function(data) {
               if (data.succeeded) {
                 // Create the account using data.config!
+                let password = data.password
                 let config = readFromXML(new XML(data.config));
                 replaceVariables(config, realname, email, password);
                 createAccountInBackend(config);

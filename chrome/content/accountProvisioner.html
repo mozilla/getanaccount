@@ -132,47 +132,31 @@
   <div id="chosen_email"></div>
   <table id="provision_form">
     <tr><td><span>First name:</span></td>
-        <td><input type="text" name="FirstName"
-                   id="FirstNameAccount" size="30" value=""/>
+        <td><input type="text" name="account.first_name"
+                   id="account.first_name" size="30" value=""/>
                    <span class="error"/></td></tr>
     <tr><td><span>Last name:</span></td>
-        <td><input type="text" name="LastName"
-                   id="LastNameAccount" size="30" value=""/>
+        <td><input type="text" name="account.last_name"
+                   id="account.last_name" size="30" value=""/>
                    <span class="error"/></td></tr>
-    <tr><td><span>Password:</span></td>
-        <td><input type="password" name="Passwd"
-                   id="Passwd" size="30" value=""/>
+    <tr><td><span>Address:</span></td>
+        <td><input type="text" name="account.billing.address1"
+                   id="account.billing.address1" size="30" value=""/>
                    <span class="error"/></td></tr>
-    <tr><td><span>Re-enter Password:</span></td>
-        <td><input type="password" name="PasswdAgain"
-                   id="PasswdAgain" size="30" value=""/>
+    <tr><td><span></span></td>
+        <td><input type="text" name="account.billing.address2"
+                   id="account.billing.address2" size="30" value=""/>
                    <span class="error"/></td></tr>
-    <tr><td><span>Security Question:</span></td>
-        <td><select id="questions" name="selection">
-            <option value="choosequestion"
-                    style="font-style:italic;"> Choose a question ... </option>
-            <option value="What is your primary frequent flyer number"
-              >What is your primary frequent flyer number</option>
-            <option value="What is your library card number"
-              >What is your library card number</option>
-            <option value="What was your first phone number"
-              >What was your first phone number</option>
-            <option value="What was your first teacher&#39;s name"
-              >What was your first teacher&#39;s name</option>
-            <option value="What is your father&#39;s middle name"
-              >What is your father&#39;s middle name</option>
-        </select>
-        <span class="error"/></td></tr>
-    <tr><td><span>Answer:</span></td>
-        <td><input type="text" name="IdentityAnswer"
-                   id="IdentityAnswer" size="53" value=""/>
+    <tr><td><span>City:</span></td>
+        <td><input type="text" name="account.billing.city"
+                   id="account.billing.city" size="30" value=""/>
                    <span class="error"/></td></tr>
-    <tr><td><span>Recovery email:</span></td>
-        <td><input type="text" name="SecondaryEmail"
-                   id="SecondaryEmail" size="53" value=""/>
+    <tr><td><span>State:</span></td>
+        <td><input type="text" name="account.billing.state"
+                   id="account.billing.state" size="30" value=""/>
                    <span class="error"/></td></tr>
     <tr><td><span>Location:</span></td>
-        <td><select id="loc" name="loc">
+        <td><select id="account.billing.country" name="account.billing.country">
             <option value="" selected>-- Please choose your Country --</option>
             <option value="AF">Afghanistan (افغانستان)</option>
             <option value="AX">Aland Islands</option>
@@ -421,10 +405,57 @@
             <option value="ZW">Zimbabwe</option>
             </select>
             <span class="error"/></td></tr>
-    <tr><td><span>Word Verification:</span></td>
-        <td><input type="text" name="newaccountcaptcha"
-                   id="newaccountcaptcha" size="22" value=""/>
+    <tr><td><span>Zip Code:</span></td>
+        <td><input type="text" name="account.billing.zip"
+                   id="account.billing.zip" size="30" value=""/>
                    <span class="error"/></td></tr>
+    <tr><td><span>Phone Number:</span></td>
+        <td><input type="text" name="account.billing.phone"
+                   id="account.billing.phone" size="30" value=""/>
+                   <span class="error"/></td></tr>
+    <tr><td><span>Credit Card Number:</span></td>
+        <td><input type="text" name="account.billing.card_number"
+                   id="account.billing.card_number" size="16" value=""/>
+                   <span class="error"/></td></tr>
+    <tr><td><span>CVV:</span></td>
+        <td><input type="text" name="account.billing.card_cvv"
+                   id="account.billing.card_cvv" size="3" value=""/>
+                   <span class="error"/></td></tr>
+    <tr><td><span>Expiry Month:</span></td>
+        <td><select id="account.billing.card_expiry_month"
+                    name="account.billing.expiry_month">
+            <option value="" selected>-- Please choose your Month --</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+            </select>
+            <span class="error"/></td></tr>
+    <tr><td><span>Expiry Year:</span></td>
+        <td><select id="account.billing.card_expiry_year"
+                    name="account.billing.expiry_year">
+            <option value="" selected>-- Please choose your Year --</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            </select>
+            <span class="error"/></td></tr>
     <tr><td><span>Terms of Service:</span></td>
         <td>
  <textarea rows="5" cols="80" style="width:100%;text-align:" readonly="readonly" onfocus="this.rows=10">Terms of Service</textarea>
