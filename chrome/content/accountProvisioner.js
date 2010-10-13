@@ -166,6 +166,7 @@ $(function() {
 
   $(".search").click(function() {
     saveState();
+    $("#notifications").children().hide();
     var firstname = $("#FirstName").val();
     var lastname = $("#LastName").val();
     if (firstname.length <= 0) {
@@ -180,7 +181,7 @@ $(function() {
               {"FirstName": firstname, "LastName": lastname},
               function(data) {
       let alternates = $("#alternates").empty();
-      if (data.succeeded) {
+      if (data.succeeded && data.addresses.length) {
         $("span.cost").text("$" + data.price + "/year");
         for each (let [i, address] in Iterator(data.addresses)) {
           alternates.append($("<li class='address'/>").data("address", address)

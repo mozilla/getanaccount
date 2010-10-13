@@ -159,6 +159,10 @@ option .domain {
   color: red;
 }
 
+.error a {
+  text-decoration: underline;
+}
+
 .success {
   color: green;
 }
