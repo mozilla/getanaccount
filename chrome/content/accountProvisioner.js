@@ -249,11 +249,13 @@ $(function() {
     $("#FirstName").val($("#account\\.first_name").val());
     $("#LastName").val($("#account\\.last_name").val());
     $("#window, #existing").show();
+    $("#provision_form .error").text("");
     $("#new_account").hide();
   });
 
   $("button.submit").click(function() {
     saveState();
+    $("#provision_form .error").text("");
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
     let email = $("#chosen_email").text();
 
@@ -285,8 +287,12 @@ $(function() {
               else {
                 for (let i in data.errors) {
                   // Populate the errors.
-                  $("#new_account #"+i)
-                    .next(".error").text(data.errors[i]);
+                  let value = $("#provision_form #"+i.replace(".", "\\.", "g"));
+                  if (!value.length)
+                    // Assume it's a global error if we can't find the
+                    // specific element it applies to.
+                    value = $("#provision_form #global");
+                  value.next(".error").text(data.errors[i]);
                 }
               }
             }});
