@@ -77,12 +77,12 @@ zip -0 -r $JAR_FILE `cat files`
 #cp --verbose --parents `cat files` $TMP_DIR/chrome
 
 # prepare components and defaults
-echo "Copying various files to $TMP_DIR folder..."
+echo "Copying various files from $ROOT_DIRS to $TMP_DIR folder..."
 for DIR in $ROOT_DIRS; do
   mkdir $TMP_DIR/$DIR
   FILES="`find $DIR -path '*CVS*' -prune -o -type f -print | grep -v \~`"
   echo $FILES >> files
-  cp -v $FILES $TMP_DIR
+  cp -Rv $DIR $TMP_DIR
 done
 
 # Copy other files to the root of future XPI.
@@ -102,8 +102,9 @@ if [ -f "chrome.manifest" ]; then
   #s/^(skin|locale)(\s+\S*\s+\S*\s+)(.*\/)$/\1\2jar:chrome\/$APP_NAME\.jar!\/\3/
   #
   # Then try this! (Same, but with characters escaped for bash :)
-  sed -i -r s/^\\\(content\\s+\\S*\\s+\\\)\\\(\\S*\\/\\\)$/\\1jar:chrome\\/$APP_NAME-$VERSION\\.jar!\\/\\2/ chrome.manifest
-  sed -i -r s/^\\\(skin\|locale\\\)\\\(\\s+\\S*\\s+\\S*\\s+\\\)\\\(.*\\/\\\)$/\\1\\2jar:chrome\\/$APP_NAME-$VERSION\\.jar!\\/\\3/ chrome.manifest
+  sed -E -i.bak 's/^(content[[:space:]]+[^[:space:]]*[[:space:]]+)([^[:space:]]*\/)[[:space:]]*$/\1jar:chrome\/'$APP_NAME-$VERSION'\.jar!\/\2/' chrome.manifest
+  sed -E -i.bak 's/^(skin|locale)([[:space:]]+[^[:space:]]*[[:space:]]+[^[:space:]]*[[:space:]]+)(.*\/)[[:space:]]*$/\1\2jar:chrome\/'$APP_NAME-$VERSION'\.jar!\/\3/' chrome.manifest
+  rm chrome.manifest.bak
 
   # (it simply adds jar:chrome/whatever.jar!/ at appropriate positions of chrome.manifest)
 fi

@@ -85,9 +85,9 @@ function saveState() {
  **/
 function objectify(inputs) {
   var rv = {}
-  inputs.each(function(index, value) {
-    var key = $(value).attr("name").split(".");
-    var value = $(value).attr("value");
+  inputs.each(function(index, input) {
+    var key = $(input).attr("name").split(".");
+    var value = $(input).attr("value");
     var obj = rv;
     for (var i in key) {
       var part = key[i];
