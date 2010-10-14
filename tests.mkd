@@ -1,0 +1,78 @@
+Test Script.
+============
+
+* Click "File » New » Mail Account…".
+* Should open New Account Provisioner window.
+
+* Click "free email account alternatives" at the top.
+* Should open
+  http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html
+  in your browser.
+  (Currently also opens a compose window.  That's a bug.)
+
+* Enter First Name of "Blake".
+* Enter Last Name of "Winton".
+* Click "Search".
+
+* Should display "Sorry, we cannot find any suggestions for your name. Please
+  try one of the free email account alternatives." in red.
+
+* Click "free email account alternatives" in red.
+
+* Should open
+  http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html
+  in your browser.
+* (Currently also opens a compose window.  That's a bug.)
+
+* Click "Use Existing Account".
+
+* Should display the old account wizard, but in white.
+
+* Click "Back to previous".
+
+* Should display the new Account Provisioner again, with "Blake" and "Winton"
+  still filled in.
+
+* Change First Name to "Dan".
+* Hit <Enter> (Should be the same as clicking "Search").
+
+* Should display a price, and a list of six email addresses:
+    * I would like the following email address for $20/year
+    * dan@winton.com
+    * dan@winton.org
+    * d@winton.com
+    * dan@winton.co.uk
+    * dan@winton.ca
+    * dan@winton.edu
+
+* Click the arrow beside "dan@winton.co.uk".
+
+* Should display the Provisioning form with "dan@winton.co.uk" at the top.
+
+* Fill out the fields as you scroll to the bottom.
+* Click "I accept. Create my account."
+
+* Should display three errors in red on the page.
+  "Invalid first name. Try "Andrew" instead."
+  "Incorrect CVV."
+  and
+  "Quote is invalid or expired; please retry suggest."
+
+* Click "I accept. Create my account." again.
+
+* Should remove the three errors, and then display them again.
+
+* Click "Oops, take me back".
+
+* Should display the previous page.
+
+* Click "dan@winton.com".
+
+* Should display the Provisioning form again, with your previous data, but no
+  errors, and with "dan@winton.com" at the top.
+
+* Change First Name to "Blake".
+* Click "I accept. Create my account."
+
+* Should close the window, and you should now have a "dan@winton.com" account
+  with an outgoing server of "Provisioned Account - smtp.winton.com".
