@@ -147,6 +147,7 @@ $(function() {
   //$("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
   saveState();
 
+  $("#window").css("height", window.innerHeight - 1);
 
   $("#provider").change(function() {
     var domain = $(this).find(":selected").attr("domain");
@@ -180,13 +181,14 @@ $(function() {
     $.getJSON(suggestFromName,
               {"FirstName": firstname, "LastName": lastname},
               function(data) {
-      let alternates = $("#alternates").empty();
+      let results = $("#results");
+      results.find(".row").not(".th").empty();
       if (data.succeeded && data.addresses.length) {
-        $("span.cost").text("$" + data.price + "/year");
+        $("#FirstAndLastName").text(firstname + " " + lastname);
         for each (let [i, address] in Iterator(data.addresses)) {
-          alternates.append($("<li class='address'/>").data("address", address)
-                              .append($("<span class='address'/>").text(address),
-                              $("<button class='create'/>").html("➡")));
+          $("<div class='row'></div>").appendTo(results)
+                        .append($("<div class='address'></div>").text(address),
+                                $("<div class='pricing'></div>").append($("<button class='create'/>").data("address", address).text("purchase for $" + data.price + " a year")));
         }
         $("#notifications .success").show();
         storedData = data;
@@ -203,7 +205,7 @@ $(function() {
 
   $("#notifications").delegate("button.create", "click", function() {
     saveState();
-    $("#chosen_email").text($(this).parent().data("address"));
+    $("#chosen_email").text($(this).data("address"));
     $("#account\\.first_name").val($("#FirstName").val());
     $("#account\\.last_name").val($("#LastName").val());
     $("#window, #existing").hide();
@@ -297,13 +299,13 @@ $(function() {
               }
             }});
   });
+  $("a.optional").click(function() {
+    $("#existing .message").effect("highlight", {}, 3000);
+  });
 
   $("button.existing").click(function() {
     saveState();
     NewMailAccount(msgWindow, undefined, NewMailAccount);
     window.close();
   });
-
-  $("#FirstName").focus().select();
-  $("#existing").fadeIn(3 * 1000);
 });

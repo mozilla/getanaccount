@@ -77,51 +77,69 @@
   <script type="text/javascript;version=1.8"
           src="chrome://accountprovisioner/content/jquery.dump.js">
   </script>
+  <script type="text/javascript;version=1.8"
+          src="chrome://accountprovisioner/content/jquery.placeholder.js">
+  </script>
+  <script>
+  $(document).ready(function() {
+    $('input[placeholder]').placeholder();
+  });
+  </script>
 </head>
 <body>
-  <div id="window">
+  <div id="window" class="vbox">
 
-    <div class="message">
-      Through Hover.com Thunderbird can offer you a personalized, private, and secure email account at a reasonable cost.  Just fill in your first and last name in the section below.
+    <div class="header">
+      <h2>Create a new e-mail with Hover.com <a class="optional">(optional*)</a></h2>
+      <div class="description">
+        Through Hover.com Thunderbird can offer you a personalized, private, and secure email account at a reasonable cost. Just fill in your first and last name in the section below to get started.
+      </div>
     </div>
 
-    <div class="message">
-      You can also check out our <a
-      href="http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html"
-      target="_blank"
-      >free email account alternatives</a>.
-    </div>
+    <div id="content" class="boxFlex">
 
-    <div id="search">
-      <form onsubmit="return false;">
-      <div class="entry">
-        <label for="FirstName">First Name:</label>
-        <input type="text" id="FirstName"/>
-      </div>
-      <div class="entry">
-        <label for="LastName">Last Name:</label>
-        <input type="text" id="LastName"/>
-      </div>
-      <div class="entry">
-        <input type="submit" value="Search" class="search"/>
-      </div>
-      </form>
-    </div>
-
-    <div id="notifications">
-      <div class="error">
-        Sorry, we cannot find any suggestions for your name.</br>
-        Please try one of the <a
-        href="http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html"
-        target="_blank">free email account alternatives</a>.
-      </div>
-
-      <div class="success">
-        <div class="personals">
-          <label for="alternates">I would like the following email
-            address for <span class="cost"/>:</label>
-          <ul id="alternates"></ul>
+      <form onsubmit="return false;" id="search" class="hbox">
+        <div style="width:100%;" class="inputs boxFlex">
+          <div style="width:100%;" class="hbox">
+            <input id="FirstName" class="boxFlex" type="text" placeholder="First Name"/>
+            <input id="LastName"  class="boxFlex" type="text" placeholder="Last Name"/>
+          </div>
         </div>
+        <input type="submit" value="Search" class="search"/>
+      </form>
+
+      <div id="notifications">
+
+        <div class="error">
+          Sorry, we cannot find any suggestions for your name.</br>
+          Please try one of the <a
+          href="http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html"
+          target="_blank">free email account alternatives</a>.
+        </div>
+
+        <div class="success">
+          <div class="title">Hello <span id="FirstAndLastName"></span>, the following e-mail addresses are available to you:</div>
+          <div id="results">
+            <div class="row th">
+              <div class="address th">Available e-mail addresses</div>
+              <div class="pricing th">Pricing</div>
+            </div>
+            <!-- This is where new rows will be inserted -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="existing">
+      <div style="width:100%;" class="hbox">
+        <div class="message boxFlex">
+          You can also check out our <a
+          href="http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html"
+          target="_blank">free email account alternatives</a>.
+        </div>
+        <button class="existing">Skip this and use my existing e-mail</button>
       </div>
     </div>
 
@@ -472,16 +490,6 @@
               >I accept. Create my account.</button>
     </td></tr>
   </table>
-  </div>
-
-  <div id="existing">
-    <div id="content">
-      <!-- Set up an existing account. -->
-      <span>
-        Or do you already have an email account you want to use?
-      </span>
-      <button class="existing">Use Existing Account</button>
-    </div>
   </div>
 
 </body>
