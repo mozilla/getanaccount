@@ -300,7 +300,9 @@ $(function() {
             }});
   });
   $("a.optional").click(function() {
-    $("#existing .message").effect("highlight", {}, 3000);
+    $.scrollTo($("#existing .message"), 1000, {onAfter: function(){
+      $("#existing .message").effect("highlight", {}, 3000);
+    } } );
   });
 
   $("button.existing").click(function() {
