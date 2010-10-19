@@ -143,20 +143,9 @@ $(function() {
   let domain = storage.getItem("domain");
   $("#FirstName").val(firstname);
   $("#LastName").val(lastname);
-  //$("#username").val(username);
-  //$("#provider").find("[domain=" + domain + "]").attr("selected", "selected");
   saveState();
 
   $("#window").css("height", window.innerHeight - 1);
-
-  $("#provider").change(function() {
-    var domain = $(this).find(":selected").attr("domain");
-    $("#notifications > div").hide();
-    $("#notifications").hide();
-    $(".check").removeClass('clicked');
-    $(".domain").text(domain);
-    saveState();
-  }).change();
 
   $("body").keyup(function(e) {
     if (e.keyCode == '87' && ((e.ctrlKey && !e.altKey) || e.metaKey)) {
@@ -181,15 +170,16 @@ $(function() {
     $.getJSON(suggestFromName,
               {"FirstName": firstname, "LastName": lastname},
               function(data) {
-      let results = $("#results");
-      results.find(".row").not(".th").empty();
+      let results = $("#results").empty();
       if (data.succeeded && data.addresses.length) {
         $("#FirstAndLastName").text(firstname + " " + lastname);
+        results.append($("#resultsHeader").clone().removeClass('displayNone'));
         for each (let [i, address] in Iterator(data.addresses)) {
-          $("<div class='row'></div>").appendTo(results)
-                        .append($("<div class='address'></div>").text(address),
-                                $("<div class='pricing'></div>").append($("<button class='create'/>").data("address", address).text("purchase for $" + data.price + " a year")));
+          $("<div class='hbox row'></div>").appendTo(results)
+                        .append($("<div class='boxFlex address'></div>").text(address),
+                                $("<div class='pricing'></div>").append($("<button class='create'/>").data("address", address).text("$" + data.price + " a year")));
         }
+        results.append($("#resultsFooter").clone().removeClass('displayNone'));
         $("#notifications .success").show();
         storedData = data;
         delete storedData.succeeded
@@ -205,47 +195,12 @@ $(function() {
 
   $("#notifications").delegate("button.create", "click", function() {
     saveState();
-    $("#chosen_email").text($(this).data("address"));
+    $(this).parents(".row").addClass("selected");
     $("#account\\.first_name").val($("#FirstName").val());
     $("#account\\.last_name").val($("#LastName").val());
-    $("#window, #existing").hide();
-    $("#new_account").fadeIn(3 * 1000);
+    $("#results > .row:not(.selected), #search").hide();
+    $(".header, .success .title, #existing").slideUp("fast", function() { $("#new_account").appendTo("#content").fadeIn("fast"); } );
   });
-
-  $("button.check").click(function() {
-    saveState();
-    $("#notifications").show();
-    var domain = $("#provider").find(":selected").attr("domain");
-    var username = $("#username").val();
-    $.getJSON(checkAddress,
-              {"domain": domain, "username": username},
-              function(data) {
-      if (data.succeeded) {
-        $("#notifications .success").fadeIn();
-      }
-      else {
-        $("#notifications .options").html("");
-        for each (let [, address] in Iterator(data.addresses))
-          for each (let [, alt] in Iterator(address.alternates))
-            $("#notifications .options").append(
-              "<li username='" + alt + "' domain='" + address.domain +
-              "'>" + alt + "@" + address.domain + "</li>");
-        $("#notifications .error").fadeIn();
-      }
-    });
-  });
-
-  $(".options").delegate("li", "click", function() {
-    $("#notifications > div").hide();
-    $("#notifications").hide();
-    $("#username").val($(this).attr("username")).trigger('keyup');
-    $("#provider").find("[domain="+$(this).attr("domain")+"]")
-                  .attr("selected", "selected");
-    $("#provider").change();
-    $("#username").focus();
-    $("button.create").effect('highlight', {}, 'slow');
-    saveState();
-  })
 
   $("#back").click(function() {
     $("#FirstName").val($("#account\\.first_name").val());
@@ -253,6 +208,8 @@ $(function() {
     $("#window, #existing").show();
     $("#provision_form .error").text("");
     $("#new_account").hide();
+    $(".header, .success .title, #existing").slideDown();
+    $("#results > .row, #search").removeClass("selected").show();
   });
 
   $("button.submit").click(function() {

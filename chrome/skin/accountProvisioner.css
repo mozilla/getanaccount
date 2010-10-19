@@ -53,9 +53,8 @@ button::-moz-focus-inner {
   border:0 none;
 }
 
-#search input[type="submit"],
-#existing button.existing,
-#results button.create {
+input[type="submit"],
+button {
   -moz-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.75) inset;
   background-image: -moz-linear-gradient(center top , #EEEEEE 0%, #EEEEEE 50%, #E1E1E1 50%, #E1E1E1 100%);
   border-color: #AAAAAA #AAAAAA #888888;
@@ -71,15 +70,13 @@ button::-moz-focus-inner {
   white-space: nowrap;
 }
 
-#search input[type="submit"]:hover,
-#existing button.existing:hover,
-#results button.create:hover {
+input[type="submit"]:hover,
+button:hover {
   background-image: -moz-linear-gradient(center top , #fafafa 0%, #fafafa 50%, #eee 50%, #eee 100%);
 }
 
-#search input[type="submit"]:active,
-#existing  button.existing:active,
-#results button.create:active {
+input[type="submit"]:active,
+button:active {
   background-image: -moz-linear-gradient(center top , #ddd 0%, #ddd 100%);
 }
 
@@ -120,7 +117,7 @@ button::-moz-focus-inner {
   border-bottom: 1px solid #ccc;
 }
 
-#search input[type="text"] {
+input[type="text"], input[type="password"], textarea {
   height: 32px;
   font: 1em sans-serif;
   padding: 8px;
@@ -128,6 +125,8 @@ button::-moz-focus-inner {
   -moz-box-shadow: 0 1px 2px -1px rgba(0,0,0,0.25) inset;
   margin-right: 10px;
 }
+
+textarea { height: auto; }
 
 #search #FirstName {
   padding-left: 24px;
@@ -178,8 +177,9 @@ label.placeholder {
   font-weight: bold;
 }
 
+.hbox.row.th.displayNone { display: none; }
+
 #results {
-  display: table;
   width: 100%;
   margin: 10px 0;
   border: 1px solid #ccc;
@@ -188,48 +188,50 @@ label.placeholder {
 
 #results .row {
   width: 100%;
-  display: table-row;
+  padding: 7px;
+  background-color: #fff;
+  -moz-box-align: center;
+  -moz-box-pack: center;
   border-bottom: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  padding: 10px;
 }
 
-#results .row:last-child .address,
-#results .row:last-child .pricing {
+#results .row:last-child {
   border-bottom: none;
 }
 
-#results .address.th {
+#results .row:hover {
+  background-color: #fafafa;
+}
+
+#results .row.th:hover {
+  background-color: #f2f2f2;
+}
+
+#results .row.th {
+  background-color: #f2f2f2;
+}
+
+.row .address.th {
   font-weight: normal;
-  background-color: #f2f2f2;
 }
 
-#results .pricing.th {
+.row .pricing.th {
   border-left: 1px solid #ccc;
-  background-color: #f2f2f2;
+  text-align: left;
+  padding-left: 7px;
 }
 
-#results .address {
-  width: 70%;
-  padding: 10px;
-  display: table-cell;
+.row .address {
   font-weight: bold;
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
 }
 
-#results .pricing {
-  width: 30%;
-  padding: 10px;
-  display: table-cell;
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
+.row .pricing {
+  text-align: right;
+  min-width: 200px;
 }
 
-#results button.create {
+.pricing button.create {
   -moz-border-radius: 12px;
-  height:24px;
 }
 
 #existing {
@@ -261,39 +263,16 @@ label.placeholder {
   padding: 10px;
 }
 
-#new_account button {
-  width: 19em;
-  padding: 2px;
-  outline: 1px solid #B8BDC1;
-  border: 2px solid #EBEDEE;
-  -moz-border-radius: 3px;
-  -moz-outline-radius: 3px;
-  background-image: -moz-linear-gradient(center top , #fff 0%, #fff 50%, #EDF4F9 50%, #EDF4F9 100%);
-  text-shadow: 0 1px rgba(255, 255, 255, 0.2);
-  color: #333;
-  font-weight: bold;
-}
-
 label {
   display: block;
   color: graytext;
-  font-size: small;
 }
 
-#new_account input[type="text"],
-#new_account input[type="password"],
-#new_account textarea {
-  font: 1em sans-serif;
-  -moz-box-shadow: inset 2px 2px 1px #ccc;
-  padding: 4px;
-  background-color: #fff;
-  color: -moz-dialogtext;
-  border: 1px solid #B8BDC1;
-  -moz-border-radius: 1px;
+#back, #submitbutton {
+  margin: 10px;
 }
 
-#chosen_email {
-  text-align: center;
+#submitbutton {
   font-weight: bold;
 }
 

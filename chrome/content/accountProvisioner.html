@@ -93,7 +93,7 @@
   <div id="window" class="vbox">
 
     <div class="header">
-      <h2>Create a new e-mail with Hover.com <a class="optional">(optional*)</a></h2>
+      <h2>Create your new e-mail address <a class="optional">(optional*)</a></h2>
       <div class="description">
         Through Hover.com Thunderbird can offer you a personalized, private, and secure email account at a reasonable cost. Just fill in your first and last name in the section below to get started.
       </div>
@@ -122,13 +122,17 @@
 
         <div class="success">
           <div class="title">Hello <span id="FirstAndLastName"></span>, the following e-mail addresses are available to you:</div>
-          <div id="results">
-            <div class="row th">
-              <div class="address th">Available e-mail addresses</div>
-              <div class="pricing th">Pricing</div>
-            </div>
-            <!-- This is where new rows will be inserted -->
+
+          <div id="resultsHeader" class="hbox row th displayNone">
+            <div class="boxFlex address th">Available e-mail addresses</div>
+            <div class="pricing th">Pricing</div>
           </div>
+
+          <div id="resultsFooter" class="hbox row th displayNone">
+            <div class="boxFlex tip">You can also search for nicknames or any other term to find more emails</div>
+          </div>
+
+          <div id="results"></div>
         </div>
 
       </div>
