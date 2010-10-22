@@ -36,8 +36,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var clickableButtons = ["button.create", "button.search", "button.submit"];
-
 /**
  * Get the localstorage for this page in a way that works in chrome.
  *
