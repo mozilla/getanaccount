@@ -75,33 +75,66 @@ function saveState() {
   storage.setItem("domain", domain);
 }
 
+var storedData = {};
+var providers = {};
+var currentProvider = "";
+
+/**
+ * Walk down a dotted key to get the object at the bottom, creating any
+ * intermediate objects/arrays if necessary.
+ */
+function setObjectsForKey(root, key, value) {
+  let obj = root;
+  for each (let [i, part] in Iterator(key)) {
+    let next = key[i+1];
+    if (part == "0")
+      part = 0;
+    if (!(part in obj))
+      if (next == "0")
+        obj[part] = [{}];
+      else
+        obj[part] = {};
+
+    if (i < key.length-1)
+      obj = obj[part];
+    else {
+      if ($.isPlainObject(value))
+        for (let i in value)
+          obj[part][i] = value[i];
+      else
+        obj[part] = value;
+    }
+  }
+}
+
 /**
  * Turn a set of inputs with dotted names into an object with sub-objects.
  *
  * @param {jQuery Collection} inputs The inputs to convert.
  * @return {object} An object containing all the inputs.
  **/
-function objectify(inputs) {
+function objectify(inputs, provider) {
   var rv = {}
-  inputs.each(function(index, input) {
-    var key = $(input).attr("name").split(".");
-    var value = $(input).attr("value");
-    var obj = rv;
-    for (var i in key) {
-      var part = key[i];
-      if (!(part in obj))
-        obj[part] = {};
+  $(provider.api.reverse()).each(function(index, item) {
+    var key = item.id.split(".");
+    var value;
 
-      if (i < key.length-1)
-        obj = obj[part];
-      else
-        obj[part] = value;
+    // Handle the special types.
+    if (item.type == "stored_data") {
+      // Populate the item from the stored data.
+      setObjectsForKey(rv, key, storedData);
+      return;
     }
+    else if (item.type == "email") {
+      value = $("#results .row.selected .create").attr("address");
+    }
+    else {
+      value = inputs.filter("[name="+item.id+"]").attr("value");
+    }
+    setObjectsForKey(rv, key, value);
   });
   return rv;
 }
-
-var storedData = {};
 
 $(function() {
   // Snarf the things I need out of the window arguments.
@@ -111,30 +144,21 @@ $(function() {
 
   let prefs = Cc["@mozilla.org/preferences-service;1"]
                 .getService(Ci.nsIPrefBranch);
+  let providerList = prefs.getCharPref("extensions.accountprovisioner.providerList");
   let suggestFromName = prefs.getCharPref("extensions.accountprovisioner.suggestFromName");
   let checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
-  let provision = prefs.getCharPref("extensions.accountprovisioner.provision");
 
-  let pref_name = "geo.wifi.protocol";
-  if (!prefs.prefHasUserValue(pref_name))
-    prefs.setIntPref(pref_name, 0);
-  pref_name = "geo.wifi.uri";
-  if (!prefs.prefHasUserValue(pref_name))
-    prefs.setCharPref(pref_name, "https://www.google.com/loc/json");
-
-  var geolocation = Cc["@mozilla.org/geolocation;1"]
-                      .getService(Ci.nsIDOMGeoGeolocation);
-  geolocation.getCurrentPosition(
-    function ht_gotPosition(position) {
-      // If the user hasn't picked something already,
-      // choose the country they're in.
-      if (!$("#country option:selected").val())
-        $("#country").val(position.address.countryCode);
-    },
-    function ht_gotError(e) {
-      log("GeoError: " + e.code + ": " + e.message);
-    });
-
+  $.getJSON(providerList, function(data) {
+    providers = data;
+    for each (let [i, provider] in Iterator(data)) {
+      currentProvider = i;
+      // Fill in #provision_form.
+      for each (let [i, field] in Iterator(provider.api.reverse())) {
+        dump("Populating "+field.id+", "+field.type+"\n");
+        $("#"+field.type+"_tmpl").render(field).prependTo($("#provision_form"));
+      };
+    };
+  });
   let firstname = storage.getItem("firstname") || $("#FirstName").text();
   let lastname = storage.getItem("lastname") || $("#LastName").text();
   let username = storage.getItem("username");
@@ -153,8 +177,8 @@ $(function() {
   }).trigger("keyup");
 
   $(".search").click(function() {
-    saveState();
     $("#notifications").children().hide();
+    saveState();
     var firstname = $("#FirstName").val();
     var lastname = $("#LastName").val();
     if (firstname.length <= 0) {
@@ -165,19 +189,20 @@ $(function() {
       $("#LastName").select().focus();
       return;
     }
+    $("#notifications .spinner").show();
     $.getJSON(suggestFromName,
-              {"FirstName": firstname, "LastName": lastname},
+              {"first_name": firstname, "last_name": lastname},
               function(data) {
       let results = $("#results").empty();
       if (data.succeeded && data.addresses.length) {
         $("#FirstAndLastName").text(firstname + " " + lastname);
         results.append($("#resultsHeader").clone().removeClass('displayNone'));
         for each (let [i, address] in Iterator(data.addresses)) {
-          $("<div class='hbox row'></div>").appendTo(results)
-                        .append($("<div class='boxFlex address'></div>").text(address),
-                                $("<div class='pricing'></div>").append($("<button class='create'/>").data("address", address).text("$" + data.price + " a year")));
+          $("#result_tmpl").render({"address": address, "price": data.price})
+                           .appendTo(results);
         }
         results.append($("#resultsFooter").clone().removeClass('displayNone'));
+        $("#notifications").children().hide();
         $("#notifications .success").show();
         storedData = data;
         delete storedData.succeeded
@@ -186,6 +211,7 @@ $(function() {
       }
       else {
         // Figure out what to do if it failed.
+        $("#notifications").children().hide();
         $("#notifications .error").fadeIn();
       }
     });
@@ -214,19 +240,12 @@ $(function() {
     saveState();
     $("#provision_form .error").text("");
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
-    let email = $("#chosen_email").text();
 
     var inputs = $("#new_account :input").not("[readonly]").not("button");
 
     // Then add the information from this page.
-    var data = objectify(inputs);
-
-    data.items = [{"address": email}];
-    // Populate the item from the stored data.
-    for (let i in storedData)
-      data.items[0][i] = storedData[i];
-
-    $.ajax({url: provision,
+    var data = objectify(inputs, providers[currentProvider]);
+    $.ajax({url: providers[currentProvider].url,
             type: 'POST',
             dataType: 'json',
             processData: false,

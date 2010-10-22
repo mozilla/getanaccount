@@ -156,9 +156,15 @@ label.placeholder {
   padding: 10px;
 }
 
+#notifications .spinner,
 #notifications .error,
 #notifications .success {
   display: none;
+}
+
+.spinner {
+  float: left;
+  margin: 114px 0px 0px 283px;
 }
 
 .error {
