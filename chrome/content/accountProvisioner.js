@@ -141,6 +141,15 @@ $(function() {
   let NewMailAccount = window.arguments[0].NewMailAccount;
   let msgWindow = window.arguments[0].msgWindow;
   window.storage = getLocalStorage("accountProvisioner");
+  var ioService = Components.classes["@mozilla.org/network/io-service;1"]
+                            .getService(Components.interfaces.nsIIOService);
+  let opener = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"]
+                         .getService(Components.interfaces.nsIExternalProtocolService)
+
+  $(".external").click(function (e) {
+    e.preventDefault();
+    opener.loadUrl(ioService.newURI($(e.target).attr("href"), "UTF-8", null));
+  });
 
   let prefs = Cc["@mozilla.org/preferences-service;1"]
                 .getService(Ci.nsIPrefBranch);

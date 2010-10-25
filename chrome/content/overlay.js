@@ -41,5 +41,5 @@ function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
                     "AccountSetup",
                     "chrome,titlebar,centerscreen,width=640,height=480",
                     {msgWindow: aMsgWindow,
-                      NewMailAccount: aNewMailAccount});
+                     NewMailAccount: aNewMailAccount});
 }
