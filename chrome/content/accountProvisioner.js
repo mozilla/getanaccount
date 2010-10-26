@@ -166,6 +166,9 @@ $(function() {
         dump("Populating "+field.id+", "+field.type+"\n");
         $("#"+field.type+"_tmpl").render(field).prependTo($("#provision_form"));
       };
+      // Update the terms of service and privacy policy links.
+      $("a.tos").attr("href", provider.tos_url);
+      $("a.privacy").attr("href", provider.privacy_url);
     };
   });
   let firstname = storage.getItem("firstname") || $("#FirstName").text();
