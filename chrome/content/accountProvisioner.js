@@ -398,6 +398,7 @@ $(function() {
 
     // Then add the information from this page.
     var data = objectify(inputs, providers[currentProvider]);
+    let email = $("#results .row.selected .create").attr("address");
     $.ajax({url: providers[currentProvider].url,
             type: 'POST',
             dataType: 'json',
