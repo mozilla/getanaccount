@@ -200,8 +200,8 @@
   <script id="state_caus_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><input type="text" class="state" name="${id}"
-               id="${id}" size="30" value=""/>
+    <td><input type="text" class="state_caus ${extraClass}" name="${id}"
+               id="${id}" length="30" value=""/>
         <span class="error"/>
     </td>
     </tr>
@@ -211,8 +211,8 @@
   <script id="credit_card_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><input type="text" class="creditcard" name="${id}"
-               id="${id}" size="16" value=""/>
+    <td><input type="text" class="creditcard ${extraClass}" name="${id}"
+               id="${id}" length="16" value=""/>
         <span class="error"/>
     </td>
     </tr>
@@ -222,8 +222,8 @@
   <script id="num_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><input type="text" name="${id}"
-               id="${id}" size="${length}" value=""/>
+    <td><input type="text" name="${id}" class="num ${extraClass}"
+               id="${id}" length="${length}" value=""/>
         <span class="error"/>
     </td>
     </tr>
@@ -233,7 +233,7 @@
   <script id="month_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><select id="${id}" name="${id}">
+    <td><select id="${id}" name="${id}" class="month ${extraClass}">
           <option value="" selected>-- Please choose your Month --</option>
           <option value="01">January</option>
           <option value="02">February</option>
@@ -257,7 +257,7 @@
   <script id="year_future_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><select id="${id}"
+    <td><select id="${id}" class="yearfuture ${extraClass}"
                 name="${id}">
           <option value="" selected>-- Please choose your Year --</option>
           <option value="2010">2010</option>
@@ -280,8 +280,8 @@
   <script id="alpha_num_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><input type="text" name="${id}"
-               id="${id}" size="${length}" value=""/>
+    <td><input type="text" name="${id}" class="${extraClass}"
+               id="${id}" length="${length}" value=""/>
         <span class="error"/>
     </td>
     </tr>
@@ -291,7 +291,7 @@
   <script id="country_tmpl" type="text/html">
     <tr>
     <td><span>${label}:</span></td>
-    <td><select id="${id}" name="${id}">
+    <td><select id="${id}" name="${id}" class="country ${extraClass}">
         <option value="" selected>-- Please choose your Country --</option>
         <option value="AF">Afghanistan (افغانستان)</option>
         <option value="AX">Aland Islands</option>

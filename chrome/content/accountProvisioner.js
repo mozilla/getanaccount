@@ -62,7 +62,7 @@ function getLocalStorage(page) {
 /**
  * Save the state of this page to localstorage, so we can reconstitute it
  * later.
- **/
+ */
 function saveState() {
   var firstname = $("#FirstName").val();
   var lastname = $("#LastName").val();
@@ -112,7 +112,7 @@ function setObjectsForKey(root, key, value) {
  *
  * @param {jQuery Collection} inputs The inputs to convert.
  * @return {object} An object containing all the inputs.
- **/
+ */
 function objectify(inputs, provider) {
   var rv = {}
   $(provider.api.reverse()).each(function(index, item) {
@@ -131,9 +131,144 @@ function objectify(inputs, provider) {
     else {
       value = inputs.filter("[name="+item.id+"]").attr("value");
     }
+    if ((item.type == "credit_card") || (item.type == "num") ||
+        (item.type == "year_future") || (item.type == "month"))
+      value = value.replace(/\D+/g, '');
+
+    value = value.trim();
+
     setObjectsForKey(rv, key, value);
   });
   return rv;
+}
+
+
+/**
+ * Validate the credit card using the Luhn algorithm.
+ *
+ * @param {String} cc The credit card number.
+ * @return {boolean} True if the credit card number is valid.
+ */
+function validateCreditCard(cc) {
+  cc = cc.replace(/\D+/g, '')
+
+  // Test credit card number == true.
+  if (cc == "4111111111111111")
+    return true;
+
+  // Empty credit card number == false.
+  if (!cc.length)
+    return false;
+
+  // Calculate the checksum according to:
+  // http://en.wikipedia.org/wiki/Luhn_algorithm
+  checksum = 0;
+  for each (let [i, a] in Iterator(cc)) {
+    a = parseInt(a, 10);
+    if (((i % 2) == 0) || (a == 9))
+      checksum += a;
+    else if (a < 5)
+      checksum += 2 * a;
+    else
+      checksum += (2 * a) % 9;
+  }
+  return (checksum % 10) == 0;
+}
+
+
+/**
+ * Validate the values for a set of inputs, returning any errors.
+ *
+ * @param {jQuery Collection} inputs The inputs to validate.
+ * @return {array} The (possibly-empty) array of errors.
+ */
+function validateForm(inputs) {
+  let rv = {hasErrors: false};
+  inputs.each(function(index, item) {
+    let item = $(item);
+
+    // Get the value.
+    let value = item.attr("value").trim();
+    if (item.hasClass("creditcard") || item.hasClass("num") ||
+        item.hasClass("yearfuture"))
+      value = value.replace(/\D+/g, '');
+
+    // Check that required elements have a value.
+    if (item.hasClass("required") && (item.attr("value") == "")) {
+      rv[item.attr("id")] = "Missing required value.";
+      rv.hasErrors = true;
+      return;
+    }
+
+    let length = item.attr("length");
+    if (length && (value.length > length)) {
+      rv[item.attr("id")] = "Value too long.";
+      rv.hasErrors = true;
+      return;
+    }
+
+    // Check that credit cards pass the luhn check.
+    if (item.hasClass("creditcard")) {
+      if (!validateCreditCard(value)) {
+        rv[item.attr("id")] = "Credit card number invalid.";
+        rv.hasErrors = true;
+        return;
+      }
+    }
+
+    // Check that future years are in the future.
+    if (item.hasClass("yearfuture")) {
+
+      let expiryYear = parseInt(value, 10);
+      let expiryMonth = parseInt(inputs.filter(".month").attr("value"), 10) - 1;
+      let currentYear = new Date().getFullYear();
+      let currentMonth = new Date().getMonth();
+
+      if ((currentYear > expiryYear) ||
+          ((currentYear == expiryYear) && (currentMonth > expiryMonth))) {
+        rv[item.attr("id")] = "Credit card has expired.";
+        rv.hasErrors = true;
+        return;
+      }
+    }
+
+    // Check that state_caus is there if the country is CA or US.
+    if (item.hasClass("state_caus")) {
+      let country = inputs.filter(".country").attr("value");
+      if (((country == "CA") || (country == "US")) && (value == "")) {
+        rv[item.attr("id")] = "Missing required value.";
+        rv.hasErrors = true;
+        return;
+      }
+    }
+
+  });
+
+  return rv;
+}
+
+/**
+ * Display the errors for set of inputs in the specified form.
+ *
+ * @param {jQuery Collection} inputs The possibly-erroneous inputs.
+ * @param {array} The (possibly-empty) array of errors.
+ */
+function displayErrors(inputs, errors) {
+  // General errors go in $("#provision_form .error").text("");
+  // value.next(".error").text(data.errors[i]);
+  for (let i in errors) {
+    // Populate the errors.
+    if (i == "hasErrors")
+      continue;
+
+    let value = inputs.filter("#"+i.replace(".", "\\.", "g"));
+    if (!value.length)
+      // Assume it's a global error if we can't find the
+      // specific element it applies to.
+      value = $("#provision_form #global");
+    value.next(".error").text(errors[i]);
+  }
+  return;
 }
 
 $(function() {
@@ -163,7 +298,7 @@ $(function() {
       currentProvider = i;
       // Fill in #provision_form.
       for each (let [i, field] in Iterator(provider.api.reverse())) {
-        dump("Populating "+field.id+", "+field.type+"\n");
+        field.extraClass = field.required ? "required" : "";
         $("#"+field.type+"_tmpl").render(field).prependTo($("#provision_form"));
       };
       // Update the terms of service and privacy policy links.
@@ -252,8 +387,14 @@ $(function() {
     saveState();
     $("#provision_form .error").text("");
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
-
     var inputs = $("#new_account :input").not("[readonly]").not("button");
+
+    // Make sure we pass the client-side checks.
+    let errors = validateForm(inputs);
+    if (errors.hasErrors) {
+      displayErrors(inputs, errors);
+      return;
+    }
 
     // Then add the information from this page.
     var data = objectify(inputs, providers[currentProvider]);
@@ -264,6 +405,7 @@ $(function() {
             contentType: 'text/json',
             data: JSON.stringify(data),
             success: function(data) {
+              dump("data="+JSON.stringify(data)+"\n");
               if (data.succeeded) {
                 // Create the account using data.config!
                 let password = data.password
@@ -273,15 +415,7 @@ $(function() {
                 window.close();
               }
               else {
-                for (let i in data.errors) {
-                  // Populate the errors.
-                  let value = $("#provision_form #"+i.replace(".", "\\.", "g"));
-                  if (!value.length)
-                    // Assume it's a global error if we can't find the
-                    // specific element it applies to.
-                    value = $("#provision_form #global");
-                  value.next(".error").text(data.errors[i]);
-                }
+                displayErrors(inputs, data.errors);
               }
             }});
   });
