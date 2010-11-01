@@ -103,6 +103,17 @@ button:active {
   color: #333;
 }
 
+.header .commentary {
+  font-size: x-small;
+  margin: 5px 0;
+  color: #666;
+}
+
+/* External things are links that open in a browser, so underline them. */
+.external {
+  text-decoration: underline;
+}
+
 #content {
   background-color: rgba(255,255,255,0.6);
   -moz-border-radius: 5px;
@@ -169,10 +180,6 @@ label.placeholder {
 
 .error {
   color: red;
-}
-
-.error a {
-  text-decoration: underline;
 }
 
 .success .title {
