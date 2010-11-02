@@ -379,11 +379,13 @@ $(function() {
     $("#account\\.last_name").val($("#LastName").val());
     $("#results > .row:not(.selected), #search").hide();
     $(".header, .success .title, #existing").slideUp("fast", function() { $("#new_account").appendTo("#content").fadeIn("fast"); } );
+    $("#window").css("height", "auto");
   });
 
   $("#back").click(function() {
     $("#FirstName").val($("#account\\.first_name").val());
     $("#LastName").val($("#account\\.last_name").val());
+    $("#window").css("height", window.innerHeight - 1);
     $("#window, #existing").show();
     $("#provision_form .error").text("");
     $("#new_account").hide();
