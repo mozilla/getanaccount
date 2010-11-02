@@ -314,14 +314,22 @@ $(function() {
   $("#LastName").val(lastname);
   saveState();
 
+  let metaKey = false;
+
   $("#window").css("height", window.innerHeight - 1);
 
-  $("body").keyup(function(e) {
-    if (e.keyCode == '87' && ((e.ctrlKey && !e.altKey) || e.metaKey)) {
+  $(window).keydown(function(e) {
+      // Handle Cmd-W.
+    if (e.keyCode == '224') {
+      metaKey = true;
+      Application.console.log("metaKey! " + metaKey);
+    } else if (e.keyCode == '87' && ((e.ctrlKey && !e.altKey) || metaKey)) {
       // Handle Ctrl-W.
       window.close();
+    } else {
+      metaKey = false;
     }
-  }).trigger("keyup");
+  }).trigger("keydown");
 
   $(".search").click(function() {
     $("#notifications").children().hide();

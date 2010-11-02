@@ -131,13 +131,25 @@ button:active {
 input[type="text"], input[type="password"], textarea {
   height: 32px;
   font: 1em sans-serif;
-  padding: 8px;
+  padding: 8px 2px;
   border: 1px solid #aaa;
   -moz-box-shadow: 0 1px 2px -1px rgba(0,0,0,0.25) inset;
+}
+
+#search input[type="text"] {
   margin-right: 10px;
+  padding: 8px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+  -moz-box-shadow: 0 0 0 3px #CCF1FF inset;
 }
 
 textarea { height: auto; }
+
+input[type="submit"].search {
+  font-weight: bold;
+}
 
 #search #FirstName {
   padding-left: 24px;
@@ -180,6 +192,9 @@ label.placeholder {
 
 .error {
   color: red;
+  padding: 0 4px;
+  margin-top: 4px;
+  display: block;
 }
 
 .success .title {
@@ -276,8 +291,19 @@ label.placeholder {
   padding: 10px;
 }
 
-label {
-  display: block;
+#provision_form label {
+  min-width: 150px;
+  display: inline-block;
+  color: #333333;
+  text-align: right;
+}
+
+#provision_form label.tos {
+  vertical-align: top;
+}
+
+#provision_form input {
+  width: 100%;
 }
 
 #back, #submitbutton {
@@ -286,11 +312,6 @@ label {
 
 #submitbutton {
   font-weight: bold;
-}
-
-#provision_form {
-  color: graytext;
-  font-size: small;
 }
 
 /* START hbox/vbox normalization from http://alex.dojotoolkit.org/2009/08/css-3-progress/ */
