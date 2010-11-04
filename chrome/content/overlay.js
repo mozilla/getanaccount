@@ -35,6 +35,10 @@
  * ***** END LICENSE BLOCK ***** */
 
 function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
+  if (!aMsgWindow)
+    aMsgWindow = Components.classes["@mozilla.org/messenger/services/session;1"]
+                           .getService(Components.interfaces.nsIMsgMailSession)
+                           .topmostMsgWindow;
   if (!aNewMailAccount)
     aNewMailAccount = NewMailAccount;
   window.openDialog("chrome://accountprovisioner/content/accountProvisioner.html",
