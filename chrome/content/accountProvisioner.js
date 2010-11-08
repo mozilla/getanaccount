@@ -271,6 +271,27 @@ function displayErrors(inputs, errors) {
   return;
 }
 
+/**
+ * Log a successful account creation, if we have a log url for that provider.
+ *
+ * @param provider The provider we created the account for.
+ * @param config The created config.
+ */
+function logSuccess(provider, config) {
+  let providerLogUrl = providers[currentProvider].log_url;
+  if (providerLogUrl) {
+    let data = {success: 'true',
+                config: config };
+    dump("Logging "+JSON.stringify(data)+" to "+providerLogUrl+"\n");
+    $.ajax({url: providerLogUrl,
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            contentType: 'text/json',
+            data: JSON.stringify(data)});
+  };
+}
+
 $(function() {
   // Snarf the things I need out of the window arguments.
   let NewMailAccount = window.arguments[0].NewMailAccount;
@@ -423,6 +444,7 @@ $(function() {
                 let config = readFromXML(new XML(data.config));
                 replaceVariables(config, realname, email, password);
                 createAccountInBackend(config);
+                logSuccess(currentProvider, data.config);
                 window.close();
               }
               else {
