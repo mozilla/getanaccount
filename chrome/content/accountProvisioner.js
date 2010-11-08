@@ -242,6 +242,13 @@ function validateForm(inputs) {
       }
     }
 
+    // Check that the user has accepted the terms of service.
+    if (value == "Accept" && !item.attr("checked")) {
+      rv["accept_tos"] = "You must accept the Terms of Service.";
+      rv.hasErrors = true;
+      return;
+    }
+
   });
 
   return rv;
@@ -266,7 +273,7 @@ function displayErrors(inputs, errors) {
       // Assume it's a global error if we can't find the
       // specific element it applies to.
       value = $("#provision_form #global");
-    value.next(".error").text(errors[i]);
+    value.siblings(".error").text(errors[i]);
   }
   return;
 }
@@ -418,7 +425,8 @@ $(function() {
     saveState();
     $("#provision_form .error").text("");
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
-    var inputs = $("#new_account :input").not("[readonly]").not("button");
+    var inputs = $("#new_account").find(":input").not("[readonly]")
+                                  .not("button");
 
     // Make sure we pass the client-side checks.
     let errors = validateForm(inputs);

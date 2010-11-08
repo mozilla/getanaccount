@@ -306,6 +306,10 @@ label.placeholder {
   width: 100%;
 }
 
+#provision_form input[type="checkbox"] {
+  width: auto;
+}
+
 #back, #submitbutton {
   margin: 10px;
 }

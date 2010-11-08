@@ -189,20 +189,26 @@ By clicking on 'I accept' below you are agreeing to the Terms of Service above a
 If the user clicks "I accept", the account credentials are transmitted through a secure connection directly to the user-selected partner. The credit card information, password and security question and answer are not transmitted to the Mozilla server.
 
 If the account can be provisioned, the service provider then returns configuration data which the Account Provisioner uses to configure Thunderbird to be able to login to the server. This data includes (but is not limited to) server name, port number, and socket type for both the incoming and outgoing mail servers. This data is retained by Mozilla in its original form for 10 days for debugging purposes only. After that, it is retained in aggregate form only.  We may release reports containing aggregated, anonymized summaries of the data to the community to aid in product and design decisions.
-        </textarea>
-        <span class="error"/></td></tr>
+        </textarea></td></tr>
+    <tr>
+      <td><label class="tos">I Accept.</label></td>
+      <td><span class="error"></span>
+        <input type="checkbox" id="accept_tos" name="accept_tos"
+               value="Accept"/>
+      </td>
+    </tr>
     <tr><td colspan="2">
-      <span class="commentary" id="global">By clicking on 'I accept' below
+      <span class="commentary" id="global">By clicking on 'I accept' above
         you are agreeing to the Terms of Service above, and the
         third-party's <a href="" class="tos external">Terms of Service</a>
         and <a href="" class="privacy external">Privacy Policy</a>.</span>
-      <span class="error"></span>
+      </span>
       </td></tr>
     <tr><td colspan="2" align="center">
       <button id="back" name="backbutton"
               >Oops, take me back.</button>
       <button class="submit" id="submitbutton" name="submitbutton"
-              >I accept. Create my account.</button>
+              >Create my account.</button>
     </td></tr>
   </table>
   </div>
