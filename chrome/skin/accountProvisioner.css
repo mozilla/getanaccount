@@ -262,6 +262,10 @@ label.placeholder {
   -moz-border-radius: 12px;
 }
 
+.pricing span.create {
+  display: none;
+}
+
 #existing {
   height: 36px;
   width: 100%;

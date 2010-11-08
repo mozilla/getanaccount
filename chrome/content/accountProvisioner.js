@@ -406,7 +406,11 @@ $(function() {
     $("#account\\.first_name").val($("#FirstName").val());
     $("#account\\.last_name").val($("#LastName").val());
     $("#results > .row:not(.selected), #search").hide();
-    $(".header, .success .title, #existing").slideUp("fast", function() { $("#new_account").appendTo("#content").fadeIn("fast"); } );
+    $(".header, .success .title, #existing").slideUp("fast", function() {
+      $("#new_account").appendTo("#content").fadeIn("fast");
+      $("button.create").hide();
+      $("span.create").show();
+    });
     $("#window").css("height", "auto");
   });
 
@@ -414,6 +418,8 @@ $(function() {
     $("#FirstName").val($("#account\\.first_name").val());
     $("#LastName").val($("#account\\.last_name").val());
     $("#window").css("height", window.innerHeight - 1);
+    $("button.create").show();
+    $("span.create").hide();
     $("#window, #existing").show();
     $("#provision_form .error").text("");
     $("#new_account").hide();
