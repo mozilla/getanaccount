@@ -40,5 +40,4 @@
 <overlay id="msgAccountCentralOverlay-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/javascript" src="overlay.js;version=1.8"/>
-  <script type="application/javascript" src="msgAccountCentralOverlay.js;version=1.8"/>
 </overlay>

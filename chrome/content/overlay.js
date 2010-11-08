@@ -47,3 +47,17 @@ function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
                     {msgWindow: aMsgWindow,
                      NewMailAccount: aNewMailAccount});
 }
+
+(function() {
+  var newMailAccountOverlay = {
+    onLoad: function(e) {
+      if (typeof AddMailAccount === "function") {
+        // Replace the AddMailAccount global function with our own
+        AddMailAccount = function() { NewMailAccountProvisioner(); }
+      }
+    }
+  };
+
+  window.addEventListener("load", function(e) { newMailAccountOverlay.onLoad(e); }, false);
+
+}());
