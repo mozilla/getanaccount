@@ -37,20 +37,8 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<?xml-stylesheet href="chrome://accountprovisioner/skin/overlay.css"
-                 type="text/css"?>
-<!DOCTYPE overlay SYSTEM
-  "chrome://accountprovisioner/locale/accountprovisioner.dtd">
-<overlay id="accountprovisioner-overlay"
+<overlay id="msgAccountCentralOverlay-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/javascript" src="overlay.js;version=1.8"/>
-  <row id="CreateAccount" class="acctCentralRow">
-    <hbox>
-      <label class="acctcentraltext acctcentrallinktext"
-             value="BBBBBBB!!!!!"
-             prev-value="&newacctlink.label;"
-             chromedir="&locale.dir;"
-             onclick="NewMailAccountProvisioner();"/>
-    </hbox>
-  </row>
+  <script type="application/javascript" src="msgAccountCentralOverlay.js;version=1.8"/>
 </overlay>
