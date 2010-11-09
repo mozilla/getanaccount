@@ -444,6 +444,7 @@ $(function() {
     // Then add the information from this page.
     var data = objectify(inputs, providers[currentProvider]);
     let email = $("#results .row.selected .create").attr("address");
+    $("#new_account").find(".spinner").show();
     $.ajax({url: providers[currentProvider].url,
             type: 'POST',
             dataType: 'json',
@@ -452,6 +453,7 @@ $(function() {
             data: JSON.stringify(data),
             success: function(data) {
               dump("data="+JSON.stringify(data)+"\n");
+              $("#new_account").find(".spinner").hide();
               if (data.succeeded) {
                 // Create the account using data.config!
                 let password = data.password
@@ -459,7 +461,8 @@ $(function() {
                 replaceVariables(config, realname, email, password);
                 createAccountInBackend(config);
                 logSuccess(currentProvider, data.config);
-                window.close();
+                $("#new_account").hide();
+                $("#successful_account").show();
               }
               else {
                 displayErrors(inputs, data.errors);
@@ -470,6 +473,11 @@ $(function() {
     $.scrollTo($("#existing .message"), 1000, {onAfter: function(){
       $("#existing .message").effect("highlight", {}, 3000);
     } } );
+  });
+
+
+  $("button.close").click(function() {
+    window.close();
   });
 
   $("button.existing").click(function() {

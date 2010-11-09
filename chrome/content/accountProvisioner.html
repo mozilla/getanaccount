@@ -211,6 +211,15 @@ If the account can be provisioned, the service provider then returns configurati
               >Create my account.</button>
     </td></tr>
   </table>
+  <img class="spinner"
+       src="chrome://accountprovisioner/skin/spinner.gif"/>
+
+  </div>
+
+  <div id="successful_account">
+    <h2>Congratulations!</h2>
+    You have successfully set up your account.<br/>
+    <button class="close">Close this window.</button>
   </div>
 
 </body>
@@ -224,7 +233,7 @@ If the account can be provisioned, the service provider then returns configurati
         <button class="create"
                 address="${address}">$${price} a year</button>
         <span class="create"
-              address="${address}">$${price} a year</button>
+              address="${address}">$${price} a year</span>
       </div>
     </div>
   </script>
