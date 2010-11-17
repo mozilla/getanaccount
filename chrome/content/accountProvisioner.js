@@ -78,6 +78,7 @@ function saveState() {
 var storedData = {};
 var providers = {};
 var currentProvider = "";
+var actionList = [];
 
 /**
  * Walk down a dotted key to get the object at the bottom, creating any
@@ -185,7 +186,7 @@ function validateCreditCard(cc) {
 function validateForm(inputs) {
   let rv = {hasErrors: false};
   inputs.each(function(index, item) {
-    let item = $(item);
+    item = $(item);
 
     // Get the value.
     let value = item.attr("value").trim();
@@ -303,6 +304,7 @@ $(function() {
   // Snarf the things I need out of the window arguments.
   let NewMailAccount = window.arguments[0].NewMailAccount;
   let msgWindow = window.arguments[0].msgWindow;
+  actionList.push("Starting");
   window.storage = getLocalStorage("accountProvisioner");
   var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                             .getService(Components.interfaces.nsIIOService);
@@ -319,6 +321,7 @@ $(function() {
   let providerList = prefs.getCharPref("extensions.accountprovisioner.providerList");
   let suggestFromName = prefs.getCharPref("extensions.accountprovisioner.suggestFromName");
   let checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
+  let logUrl = prefs.getCharPref("extensions.accountprovisioner.logUrl");
 
   $.getJSON(providerList, function(data) {
     providers = data;
@@ -346,6 +349,20 @@ $(function() {
 
   $("#window").css("height", window.innerHeight - 1);
 
+  $(window).unload(function() {
+    actionList.push("Closing");
+    Application.console.log("Logging actions of " +
+                            JSON.stringify(actionList) + ".");
+    $.ajax({url: logUrl,
+            async: false, // We need this to finish before we close the page.
+            type: "POST",
+            dataType: "json",
+            processData: false,
+            contentType: "text/json",
+            data: JSON.stringify(actionList)});
+    actionList = [];
+  });
+
   $(window).keydown(function(e) {
       // Handle Cmd-W.
     if (e.keyCode == '224') {
@@ -360,6 +377,7 @@ $(function() {
   }).trigger("keydown");
 
   $(".search").click(function() {
+    actionList.push("Searching");
     $("#notifications").children().hide();
     saveState();
     var firstname = $("#FirstName").val();
@@ -378,6 +396,7 @@ $(function() {
               function(data) {
       let results = $("#results").empty();
       if (data.succeeded && data.addresses.length) {
+        actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
         results.append($("#resultsHeader").clone().removeClass('displayNone'));
         for each (let [i, address] in Iterator(data.addresses)) {
@@ -393,6 +412,7 @@ $(function() {
         delete storedData.price
       }
       else {
+        actionList.push("Searching failed");
         // Figure out what to do if it failed.
         $("#notifications").children().hide();
         $("#notifications .error").fadeIn();
@@ -401,6 +421,7 @@ $(function() {
   });
 
   $("#notifications").delegate("button.create", "click", function() {
+    actionList.push("Creating");
     saveState();
     $(this).parents(".row").addClass("selected");
     $("#account\\.first_name").val($("#FirstName").val());
@@ -415,6 +436,7 @@ $(function() {
   });
 
   $("#back").click(function() {
+    actionList.push("Going back");
     $("#FirstName").val($("#account\\.first_name").val());
     $("#LastName").val($("#account\\.last_name").val());
     $("#window").css("height", window.innerHeight - 1);
@@ -428,6 +450,7 @@ $(function() {
   });
 
   $("button.submit").click(function() {
+    actionList.push("Submitting");
     saveState();
     $("#provision_form .error").text("");
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
@@ -437,6 +460,7 @@ $(function() {
     // Make sure we pass the client-side checks.
     let errors = validateForm(inputs);
     if (errors.hasErrors) {
+      actionList.push("Submitting errors");
       displayErrors(inputs, errors);
       return;
     }
@@ -452,6 +476,7 @@ $(function() {
             contentType: 'text/json',
             data: JSON.stringify(data),
             success: function(data) {
+              actionList.push("Submitting successful");
               dump("data="+JSON.stringify(data)+"\n");
               $("#new_account").find(".spinner").hide();
               if (data.succeeded) {
@@ -465,6 +490,7 @@ $(function() {
                 $("#successful_account").show();
               }
               else {
+                actionList.push("Submitting failed");
                 displayErrors(inputs, data.errors);
               }
             }});
@@ -481,6 +507,7 @@ $(function() {
   });
 
   $("button.existing").click(function() {
+    actionList.push("Using Existing");
     saveState();
     NewMailAccount(msgWindow, undefined, NewMailAccount);
     window.close();

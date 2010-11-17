@@ -275,6 +275,22 @@ If the account can be provisioned, the service provider then returns configurati
   </script>
 
 
+  <script id="cvv2_tmpl" type="text/html">
+    <tr>
+    <td><label for="${id}">${label}:</label></td>
+    <td>
+        <span class="error"/>
+        <input type="text" name="${id}" class="num ${extraClass}"
+               id="${id}" length="${length}" value=""
+               style="width:${length}em;"
+        /><img align="baseline" alt="CVV2"
+               title="Airodyssey at the English language Wikipedia [GFDL (www.gnu.org/copyleft/fdl.html)], from Wikimedia Commons"
+               src="chrome://accountprovisioner/skin/cvv2.png"/>
+    </td>
+    </tr>
+  </script>
+
+
   <script id="month_tmpl" type="text/html">
     <tr>
     <td><label for="${id}">${label}:</label></td>
