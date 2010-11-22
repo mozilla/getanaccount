@@ -420,3 +420,8 @@ label.placeholder {
 #content input, #content select {
   max-width: 20em !important;
 }
+
+.cvv-image {
+  vertical-align: middle;
+  margin-left: 10px;
+}
