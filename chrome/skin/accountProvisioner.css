@@ -425,3 +425,14 @@ label.placeholder {
   vertical-align: middle;
   margin-left: 10px;
 }
+
+/* for the final page */
+successful_account h4 {
+  margin: 0;
+}
+
+#success-compose, #success-addons, #success-signature {
+  margin: 5px;
+  border-width: 16px;
+  -moz-border-image: url("chrome://accountprovisioner/skin/success-border.png") 16 repeat;
+}
