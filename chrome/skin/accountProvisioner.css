@@ -432,7 +432,14 @@ successful_account h4 {
 }
 
 #success-compose, #success-addons, #success-signature {
-  margin: 5px;
-  border-width: 16px;
-  -moz-border-image: url("chrome://accountprovisioner/skin/success-border.png") 16 repeat;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #888a85;
+  background: -moz-linear-gradient( center bottom, rgb(238,238,236) 16%, rgb(255,255,255) 76%);
+  -moz-border-radius: 5px;
+}
+
+#success-compose img, #success-addons img, #success-signature img {
+  float: left;
+  margin-right: 10px;
 }
