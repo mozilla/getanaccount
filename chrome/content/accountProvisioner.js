@@ -79,6 +79,7 @@ var storedData = {};
 var providers = {};
 var currentProvider = "";
 var actionList = [];
+var account = {};
 
 /**
  * Walk down a dotted key to get the object at the bottom, creating any
@@ -134,7 +135,7 @@ function objectify(inputs, provider) {
     }
     if ((item.type == "credit_card") || (item.type == "num") ||
         (item.type == "year_future") || (item.type == "month"))
-      value = value.replace(/\D+/g, '');
+      value = value.replace(/\D+/g, "");
 
     value = value.trim();
 
@@ -151,7 +152,7 @@ function objectify(inputs, provider) {
  * @return {boolean} True if the credit card number is valid.
  */
 function validateCreditCard(cc) {
-  cc = cc.replace(/\D+/g, '')
+  cc = cc.replace(/\D+/g, "")
 
   // Test credit card number == true.
   if (cc == "4111111111111111")
@@ -192,7 +193,7 @@ function validateForm(inputs) {
     let value = item.attr("value").trim();
     if (item.hasClass("creditcard") || item.hasClass("num") ||
         item.hasClass("yearfuture"))
-      value = value.replace(/\D+/g, '');
+      value = value.replace(/\D+/g, "");
 
     // Check that required elements have a value.
     if (item.hasClass("required") && (item.attr("value") == "")) {
@@ -288,14 +289,14 @@ function displayErrors(inputs, errors) {
 function logSuccess(provider, config) {
   let providerLogUrl = providers[currentProvider].log_url;
   if (providerLogUrl) {
-    let data = {success: 'true',
+    let data = {success: "true",
                 config: config };
     dump("Logging "+JSON.stringify(data)+" to "+providerLogUrl+"\n");
     $.ajax({url: providerLogUrl,
-            type: 'POST',
-            dataType: 'json',
+            type: "POST",
+            dataType: "json",
             processData: false,
-            contentType: 'text/json',
+            contentType: "text/json",
             data: JSON.stringify(data)});
   };
 }
@@ -303,7 +304,10 @@ function logSuccess(provider, config) {
 $(function() {
   // Snarf the things I need out of the window arguments.
   let NewMailAccount = window.arguments[0].NewMailAccount;
+  let NewComposeMessage = window.arguments[0].NewComposeMessage;
+  let openAddonsMgr = window.arguments[0].openAddonsMgr;
   let msgWindow = window.arguments[0].msgWindow;
+
   actionList.push("Starting");
   window.storage = getLocalStorage("accountProvisioner");
   var ioService = Components.classes["@mozilla.org/network/io-service;1"]
@@ -365,10 +369,10 @@ $(function() {
 
   $(window).keydown(function(e) {
       // Handle Cmd-W.
-    if (e.keyCode == '224') {
+    if (e.keyCode == "224") {
       metaKey = true;
       Application.console.log("metaKey! " + metaKey);
-    } else if (e.keyCode == '87' && ((e.ctrlKey && !e.altKey) || metaKey)) {
+    } else if (e.keyCode == "87" && ((e.ctrlKey && !e.altKey) || metaKey)) {
       // Handle Ctrl-W.
       window.close();
     } else {
@@ -398,12 +402,12 @@ $(function() {
       if (data.succeeded && data.addresses.length) {
         actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
-        results.append($("#resultsHeader").clone().removeClass('displayNone'));
+        results.append($("#resultsHeader").clone().removeClass("displayNone"));
         for each (let [i, address] in Iterator(data.addresses)) {
           $("#result_tmpl").render({"address": address, "price": data.price})
                            .appendTo(results);
         }
-        results.append($("#resultsFooter").clone().removeClass('displayNone'));
+        results.append($("#resultsFooter").clone().removeClass("displayNone"));
         $("#notifications").children().hide();
         $("#notifications .success").show();
         storedData = data;
@@ -470,10 +474,10 @@ $(function() {
     let email = $("#results .row.selected .create").attr("address");
     $("#new_account").find(".spinner").show();
     $.ajax({url: providers[currentProvider].url,
-            type: 'POST',
-            dataType: 'json',
+            type: "POST",
+            dataType: "json",
             processData: false,
-            contentType: 'text/json',
+            contentType: "text/json",
             data: JSON.stringify(data),
             success: function(data) {
               actionList.push("Submitting successful");
@@ -484,7 +488,7 @@ $(function() {
                 let password = data.password
                 let config = readFromXML(new XML(data.config));
                 replaceVariables(config, realname, email, password);
-                createAccountInBackend(config);
+                account = createAccountInBackend(config);
                 logSuccess(currentProvider, data.config);
                 $("#new_account").hide();
                 $("#successful_account").show();
@@ -501,6 +505,34 @@ $(function() {
     } } );
   });
 
+  $("#success-compose").click(function() {
+    actionList.push("Compose");
+    NewComposeMessage();
+    window.close();
+  });
+
+  $("#success-addons").click(function() {
+    actionList.push("Addons");
+    openAddonsMgr();
+    window.close();
+  });
+
+  $("#success-signature").click(function() {
+    actionList.push("Signature");
+    var windowManager =
+      Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                .getService(Components.interfaces.nsIWindowMediator);
+
+    var existingAccountManager =
+      windowManager.getMostRecentWindow("mailnews:accountmanager");
+
+    if (existingAccountManager)
+      existingAccountManager.focus();
+    else
+      window.openDialog("chrome://messenger/content/AccountManager.xul",
+                        "AccountManager", "chrome,centerscreen,modal,titlebar",
+                        {server: account.incomingServer});
+  });
 
   $("button.close").click(function() {
     window.close();

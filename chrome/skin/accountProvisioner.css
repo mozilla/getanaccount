@@ -434,6 +434,7 @@ successful_account h4 {
 #success-compose, #success-addons, #success-signature {
   padding: 10px;
   margin-bottom: 10px;
+  cursor: pointer;
   border: 1px solid #888a85;
   background: -moz-linear-gradient( center bottom, rgb(238,238,236) 16%, rgb(255,255,255) 76%);
   -moz-border-radius: 5px;

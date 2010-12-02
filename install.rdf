@@ -4,9 +4,10 @@
     <em:id>accountprovisioner@latte.ca</em:id>
     <em:type>2</em:type>
     <em:name>AccountProvisioner</em:name>
-    <em:version>0.9</em:version>
+    <em:version>0.99</em:version>
     <em:creator>Blake Winton</em:creator>
     <em:contributor>Bryan Clark</em:contributor>
+    <em:contributor>Andreas Nilsson</em:contributor>
     <em:description>An extension that will allow you to create an account at a major email provider</em:description>
     <em:targetApplication>
       <Description>

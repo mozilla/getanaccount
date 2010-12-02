@@ -34,18 +34,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+let msgComposeService = Cc["@mozilla.org/messengercompose;1"].getService()
+                          .QueryInterface(Ci.nsIMsgComposeService);
+
+function NewComposeMessage() {
+  let fields = Cc["@mozilla.org/messengercompose/composefields;1"]
+                 .createInstance(Ci.nsIMsgCompFields);
+  let params = Cc["@mozilla.org/messengercompose/composeparams;1"]
+                 .createInstance(Ci.nsIMsgComposeParams);
+  params.composeFields = fields;
+  params.type = Ci.nsIMsgCompType.New;
+  params.format = Ci.nsIMsgCompFormat.Default;
+  msgComposeService.OpenComposeWindowWithParams(null, params);
+}
+
 function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
   if (!aMsgWindow)
-    aMsgWindow = Components.classes["@mozilla.org/messenger/services/session;1"]
-                           .getService(Components.interfaces.nsIMsgMailSession)
-                           .topmostMsgWindow;
+    aMsgWindow = Cc["@mozilla.org/messenger/services/session;1"]
+                   .getService(Ci.nsIMsgMailSession).topmostMsgWindow;
+
   if (!aNewMailAccount)
     aNewMailAccount = NewMailAccount;
   window.openDialog("chrome://accountprovisioner/content/accountProvisioner.html",
                     "AccountSetup",
                     "chrome,titlebar,centerscreen,width=640,height=480",
                     {msgWindow: aMsgWindow,
-                     NewMailAccount: aNewMailAccount});
+                     NewMailAccount: aNewMailAccount,
+                     NewComposeMessage: NewComposeMessage,
+                     openAddonsMgr: openAddonsMgr});
 }
 
 (function() {
@@ -58,6 +74,8 @@ function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
     }
   };
 
-  window.addEventListener("load", function(e) { newMailAccountOverlay.onLoad(e); }, false);
+  window.addEventListener("load", function(e) {
+    newMailAccountOverlay.onLoad(e);
+  }, false);
 
 }());
