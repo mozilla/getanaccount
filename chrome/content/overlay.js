@@ -19,6 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ * Blake Winton <bwinton@latte.ca>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -34,34 +35,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-let msgComposeService = Cc["@mozilla.org/messengercompose;1"].getService()
-                          .QueryInterface(Ci.nsIMsgComposeService);
+let msgComposeService = Components.classes["@mozilla.org/messengercompose;1"]
+                          .getService()
+                          .QueryInterface(Components.interfaces.nsIMsgComposeService);
 
 function NewComposeMessage() {
-  let fields = Cc["@mozilla.org/messengercompose/composefields;1"]
-                 .createInstance(Ci.nsIMsgCompFields);
-  let params = Cc["@mozilla.org/messengercompose/composeparams;1"]
-                 .createInstance(Ci.nsIMsgComposeParams);
+  let fields = Components.classes["@mozilla.org/messengercompose/composefields;1"]
+                 .createInstance(Components.interfaces.nsIMsgCompFields);
+  let params = Components.classes["@mozilla.org/messengercompose/composeparams;1"]
+                 .createInstance(Components.interfaces.nsIMsgComposeParams);
   params.composeFields = fields;
-  params.type = Ci.nsIMsgCompType.New;
-  params.format = Ci.nsIMsgCompFormat.Default;
+  params.type = Components.interfaces.nsIMsgCompType.New;
+  params.format = Components.interfaces.nsIMsgCompFormat.Default;
   msgComposeService.OpenComposeWindowWithParams(null, params);
 }
 
 function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
   if (!aMsgWindow)
-    aMsgWindow = Cc["@mozilla.org/messenger/services/session;1"]
-                   .getService(Ci.nsIMsgMailSession).topmostMsgWindow;
+    aMsgWindow = Components.classes["@mozilla.org/messenger/services/session;1"]
+                   .getService(Components.interfaces.nsIMsgMailSession)
+                   .topmostMsgWindow;
 
   if (!aNewMailAccount)
     aNewMailAccount = NewMailAccount;
-  window.openDialog("chrome://accountprovisioner/content/accountProvisioner.html",
-                    "AccountSetup",
-                    "chrome,titlebar,centerscreen,width=640,height=480",
-                    {msgWindow: aMsgWindow,
-                     NewMailAccount: aNewMailAccount,
-                     NewComposeMessage: NewComposeMessage,
-                     openAddonsMgr: openAddonsMgr});
+  let args = {msgWindow: aMsgWindow,
+              NewMailAccount: aNewMailAccount,
+              NewComposeMessage: NewComposeMessage,
+              openAddonsMgr: openAddonsMgr};
+  window.openDialog(
+    "chrome://accountprovisioner/content/accountProvisioner.html",
+    "AccountSetup",
+    "chrome,titlebar,centerscreen,width=640,height=480",
+    args);
 }
 
 (function() {

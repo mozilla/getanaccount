@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<html>
+<head>
+  <!-- This meta charset tag has to be above the license block, or
+       window.arguments is undefined.  See bug 617339.  -->
+  <meta charset="utf-8" />
 
 <!-- ***** BEGIN LICENSE BLOCK *****
    - Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -38,13 +43,6 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 
-<html>
-<head>
-  <meta charset="utf-8" />
-
-  <!-- Themes -->
-  <style type="text/css">
-  </style>
   <title>Welcome to Thunderbird</title>
   <link rel="stylesheet"
         type="text/css"
@@ -218,24 +216,28 @@ If the account can be provisioned, the service provider then returns configurati
 
   <div id="successful_account">
     <h2>Congratulations!</h2>
-    You have successfully set up your account.<br/>
+    <div id="success-message">You have successfully set up your
+    account.</div>
 
     <div id="success-compose">
     <img src="chrome://accountprovisioner/skin/success-compose.png"/>
-    <h4>Take me to my account so I can start writing some e-mails</h4>
-    This is where the action is happening!
+    <h4>Write some email</h4>
+    Let your friends and family know about your new address.<br/>
+    That’s why you got this new account, isn’t it?
     </div>
 
     <div id="success-addons">
     <img src="chrome://accountprovisioner/skin/success-addons.png"/>
-    <h4>Customize my new Thunderbird with some cool addons</h4>
-    There are thousands of addons that allows you to customize thunderbird to make it fit your specific needs.
+    <h4>Customize Thunderbird with some cool add-ons</h4>
+    There are thousands of add-ons that let you customize Thunderbird to
+    make it fit your specific needs.
     </div>
 
     <div id="success-signature">
     <img src="chrome://accountprovisioner/skin/success-signature.png"/>
-    <h4>Attach a personal signature to all my e-mails</h4>
-    You can attach a personal signature that automatically gets added to the mails you send.
+    <h4>Attach a personal signature to my email</h4>
+    You can automatically attach a quote or some information about yourself
+    to the end of every message you send.
     </div>
 
     <button class="close">Close this window.</button>

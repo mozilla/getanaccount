@@ -427,8 +427,12 @@ label.placeholder {
 }
 
 /* for the final page */
-successful_account h4 {
+#successful_account h4 {
   margin: 0;
+}
+
+#success-message {
+  padding-bottom: 1em;
 }
 
 #success-compose, #success-addons, #success-signature {
