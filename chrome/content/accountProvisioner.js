@@ -154,20 +154,16 @@ function objectify(inputs, provider) {
 function validateCreditCard(cc) {
   cc = cc.replace(/\D+/g, "")
 
-  // Test credit card number == true.
-  if (cc == "4111111111111111")
-    return true;
-
   // Empty credit card number == false.
   if (!cc.length)
     return false;
 
   // Calculate the checksum according to:
   // http://en.wikipedia.org/wiki/Luhn_algorithm
-  checksum = 0;
+  let checksum = 0;
   for each (let [i, a] in Iterator(cc)) {
     a = parseInt(a, 10);
-    if (((i % 2) == 0) || (a == 9))
+    if ((i % 2) || (a == 9))
       checksum += a;
     else if (a < 5)
       checksum += 2 * a;
