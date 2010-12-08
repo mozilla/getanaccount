@@ -291,7 +291,6 @@ function logSuccess(provider, config) {
   if (providerLogUrl) {
     let data = {success: "true",
                 config: config };
-    dump("Logging "+JSON.stringify(data)+" to "+providerLogUrl+"\n");
     $.ajax({url: providerLogUrl,
             type: "POST",
             dataType: "json",
@@ -366,7 +365,6 @@ $(function() {
             contentType: "text/json",
             data: JSON.stringify(actionList)});
     actionList = [];
-    dump("calling callback of "+okCallback+"\n");
     if (okCallback)
       okCallback();
   });
@@ -485,7 +483,6 @@ $(function() {
             data: JSON.stringify(data),
             success: function(data) {
               actionList.push("Submitting successful");
-              dump("data="+JSON.stringify(data)+"\n");
               $("#new_account").find(".spinner").hide();
               if (data.succeeded) {
                 // Create the account using data.config!
