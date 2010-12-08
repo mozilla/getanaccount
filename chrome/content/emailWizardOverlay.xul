@@ -37,11 +37,11 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<?xml-stylesheet href="chrome://accountprovisioner/skin/overlay.css"
+<?xml-stylesheet href="chrome://getanaccount/skin/overlay.css"
                  type="text/css"?>
 <!DOCTYPE overlay SYSTEM
-  "chrome://accountprovisioner/locale/accountprovisioner.dtd">
-<overlay id="accountprovisioner-overlay"
+  "chrome://getanaccount/locale/getanaccount.dtd">
+<overlay id="getanaccount-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/javascript" src="overlay.js;version=1.8"/>
   <hbox id="button_box">
@@ -49,6 +49,7 @@
             label="Back to previous"
             class="larger-button"
             position="1"
-            oncommand="NewMailAccountProvisioner(window.arguments[0].msgWindow, window.arguments[0].extraData)"/>
+            oncommand="gEmailConfigWizard._okCallback = null;NewMailAccountProvisioner(window.arguments[0].msgWindow, window.arguments[0].extraData)"/>
+    <!-- Let the NewMailAccountProvisioner handle the callback. -->
   </hbox>
 </overlay>

@@ -44,7 +44,7 @@
 
 body {
   font-family: sans-serif;
-  background-image: url("chrome://accountprovisioner/skin/bg.png");
+  background-image: url("chrome://getanaccount/skin/bg.png");
   background-repeat: no-repeat;
 }
 
@@ -154,7 +154,7 @@ input[type="submit"].search {
 
 #search #FirstName {
   padding-left: 24px;
-  background-image: url("chrome://accountprovisioner/skin/search.gif");
+  background-image: url("chrome://getanaccount/skin/search.gif");
   background-position: 5px center;
   background-repeat: no-repeat;
 }

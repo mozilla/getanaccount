@@ -39,6 +39,14 @@ let msgComposeService = Components.classes["@mozilla.org/messengercompose;1"]
                           .getService()
                           .QueryInterface(Components.interfaces.nsIMsgComposeService);
 
+function NewOnLoadMessenger() {
+  AutoConfigWizard = function newAutoConfigWizard(okCallback) {
+    dump("  Got here!\n");
+    NewMailAccountProvisioner(msgWindow, {okCallback: okCallback});
+  }
+  OnLoadMessenger();
+}
+
 function NewComposeMessage() {
   let fields = Components.classes["@mozilla.org/messengercompose/composefields;1"]
                  .createInstance(Components.interfaces.nsIMsgCompFields);
@@ -50,20 +58,44 @@ function NewComposeMessage() {
   msgComposeService.OpenComposeWindowWithParams(null, params);
 }
 
-function NewMailAccountProvisioner(aMsgWindow, aNewMailAccount) {
+function NewMailAccountProvisioner(aMsgWindow, args) {
+  dump("\n\n\n");
+  try {
+    (0)()
+  } catch (e) {
+    dump("Stack Trace:\n" +
+         e.stack.replace(/^.*?\n/,'')
+                .replace(/(?:\n@:0)?\s+$/m,'')
+                .replace(/^\(/gm,'{anonymous}(') +
+         "\n");
+  }
+  dump("args = "+args+"\n");
+  if (!args)
+    args = {};
+  for (let i in args) dump("  ."+i+"="+typeof(args[i])+"\n")
   if (!aMsgWindow)
     aMsgWindow = Components.classes["@mozilla.org/messenger/services/session;1"]
                    .getService(Components.interfaces.nsIMsgMailSession)
                    .topmostMsgWindow;
+  args.msgWindow = aMsgWindow;
 
-  if (!aNewMailAccount)
-    aNewMailAccount = NewMailAccount;
-  let args = {msgWindow: aMsgWindow,
-              NewMailAccount: aNewMailAccount,
-              NewComposeMessage: NewComposeMessage,
-              openAddonsMgr: openAddonsMgr};
+  if (!args.NewMailAccount)
+    args.NewMailAccount = NewMailAccount;
+
+  if (!args.NewComposeMessage)
+    args.NewComposeMessage = NewComposeMessage;
+
+  if (!args.openAddonsMgr)
+    args.openAddonsMgr = openAddonsMgr;
+
+  if (!args.okCallback)
+    args.okCallback = null;
+
+  dump("args = "+args+"\n");
+  for (let i in args) dump("  ."+i+"="+typeof(args[i])+"\n")
+  dump("\n\n\n");
   window.openDialog(
-    "chrome://accountprovisioner/content/accountProvisioner.html",
+    "chrome://getanaccount/content/accountProvisioner.html",
     "AccountSetup",
     "chrome,titlebar,centerscreen,width=640,height=480",
     args);

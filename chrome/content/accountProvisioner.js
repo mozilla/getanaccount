@@ -307,6 +307,7 @@ $(function() {
   let NewComposeMessage = window.arguments[0].NewComposeMessage;
   let openAddonsMgr = window.arguments[0].openAddonsMgr;
   let msgWindow = window.arguments[0].msgWindow;
+  let okCallback = window.arguments[0].okCallback;
 
   actionList.push("Starting");
   window.storage = getLocalStorage("accountProvisioner");
@@ -322,10 +323,10 @@ $(function() {
 
   let prefs = Cc["@mozilla.org/preferences-service;1"]
                 .getService(Ci.nsIPrefBranch);
-  let providerList = prefs.getCharPref("extensions.accountprovisioner.providerList");
-  let suggestFromName = prefs.getCharPref("extensions.accountprovisioner.suggestFromName");
-  let checkAddress = prefs.getCharPref("extensions.accountprovisioner.checkAddress");
-  let logUrl = prefs.getCharPref("extensions.accountprovisioner.logUrl");
+  let providerList = prefs.getCharPref("extensions.getanaccount.providerList");
+  let suggestFromName = prefs.getCharPref("extensions.getanaccount.suggestFromName");
+  let checkAddress = prefs.getCharPref("extensions.getanaccount.checkAddress");
+  let logUrl = prefs.getCharPref("extensions.getanaccount.logUrl");
 
   $.getJSON(providerList, function(data) {
     providers = data;
@@ -365,6 +366,9 @@ $(function() {
             contentType: "text/json",
             data: JSON.stringify(actionList)});
     actionList = [];
+    dump("calling callback of "+okCallback+"\n");
+    if (okCallback)
+      okCallback();
   });
 
   $(window).keydown(function(e) {
@@ -541,7 +545,9 @@ $(function() {
   $("button.existing").click(function() {
     actionList.push("Using Existing");
     saveState();
-    NewMailAccount(msgWindow, undefined, NewMailAccount);
+    NewMailAccount(msgWindow, okCallback, window.arguments[0]);
+    // Set the callback to null, so that we don't call it.
+    okCallback = null;
     window.close();
   });
 });

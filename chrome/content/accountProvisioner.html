@@ -46,7 +46,7 @@
   <title>Welcome to Thunderbird</title>
   <link rel="stylesheet"
         type="text/css"
-        href="chrome://accountprovisioner/skin/accountProvisioner.css" />
+        href="chrome://getanaccount/skin/accountProvisioner.css" />
 
   <script type="text/javascript;version=1.8"
           src="http://code.jquery.com/jquery-1.4.2.js">
@@ -70,19 +70,19 @@
           src="chrome://messenger/content/accountcreation/createInBackend.js">
   </script>
   <script type="text/javascript;version=1.8"
-          src="chrome://accountprovisioner/content/accountProvisioner.js">
+          src="chrome://getanaccount/content/accountProvisioner.js">
   </script>
   <script type="text/javascript;version=1.8"
-          src="chrome://accountprovisioner/content/jquery.dump.js">
+          src="chrome://getanaccount/content/jquery.dump.js">
   </script>
   <script type="text/javascript;version=1.8"
-          src="chrome://accountprovisioner/content/jquery.placeholder.js">
+          src="chrome://getanaccount/content/jquery.placeholder.js">
   </script>
   <script type="text/javascript;version=1.8"
-          src="chrome://accountprovisioner/content/jquery.scrollTo.js">
+          src="chrome://getanaccount/content/jquery.scrollTo.js">
   </script>
   <script type="text/javascript;version=1.8"
-          src="chrome://accountprovisioner/content/jquery.tmpl.js">
+          src="chrome://getanaccount/content/jquery.tmpl.js">
   </script>
   <script>
   $(document).ready(function() {
@@ -94,7 +94,7 @@
   <div id="window" class="vbox">
 
     <div class="header">
-      <h2>First lets create a new e-mail address <a class="optional">(optional*)</a></h2>
+      <h2>First lets create a new email address <a class="optional">(optional*)</a></h2>
       <div class="description">
         Through Hover.com Thunderbird can offer you a new personalized,
         private, and secure email account. Just fill in your first and last
@@ -125,7 +125,7 @@
       <div id="notifications">
 
         <img class="spinner"
-             src="chrome://accountprovisioner/skin/spinner.gif"/>
+             src="chrome://getanaccount/skin/spinner.gif"/>
 
         <div class="error">
           <p>Sorry we had no luck finding suggestions.</p>
@@ -136,10 +136,10 @@
         </div>
 
         <div class="success">
-          <div class="title">Hello <span id="FirstAndLastName"></span>, the following e-mail addresses are available to you:</div>
+          <div class="title">Hello <span id="FirstAndLastName"></span>, the following email addresses are available to you:</div>
 
           <div id="resultsHeader" class="hbox row th displayNone">
-            <div class="boxFlex address th">Available e-mail addresses</div>
+            <div class="boxFlex address th">Available email addresses</div>
             <div class="pricing th">Pricing</div>
           </div>
 
@@ -161,7 +161,7 @@
           href="http://momo.last-chance.net/en-US/thunderbird/features/email_providers.html"
           >free email account alternatives</a>.
         </div>
-        <button class="existing">Skip this and use my existing e-mail</button>
+        <button class="existing">Skip this and use my existing email</button>
       </div>
     </div>
 
@@ -210,7 +210,7 @@ If the account can be provisioned, the service provider then returns configurati
     </td></tr>
   </table>
   <img class="spinner"
-       src="chrome://accountprovisioner/skin/spinner.gif"/>
+       src="chrome://getanaccount/skin/spinner.gif"/>
 
   </div>
 
@@ -220,21 +220,21 @@ If the account can be provisioned, the service provider then returns configurati
     account.</div>
 
     <div id="success-compose">
-    <img src="chrome://accountprovisioner/skin/success-compose.png"/>
+    <img src="chrome://getanaccount/skin/success-compose.png"/>
     <h4>Write some email</h4>
     Let your friends and family know about your new address.<br/>
     That’s why you got this new account, isn’t it?
     </div>
 
     <div id="success-addons">
-    <img src="chrome://accountprovisioner/skin/success-addons.png"/>
+    <img src="chrome://getanaccount/skin/success-addons.png"/>
     <h4>Customize Thunderbird with some cool add-ons</h4>
     There are thousands of add-ons that let you customize Thunderbird to
     make it fit your specific needs.
     </div>
 
     <div id="success-signature">
-    <img src="chrome://accountprovisioner/skin/success-signature.png"/>
+    <img src="chrome://getanaccount/skin/success-signature.png"/>
     <h4>Attach a personal signature to my email</h4>
     You can automatically attach a quote or some information about yourself
     to the end of every message you send.
@@ -306,7 +306,7 @@ If the account can be provisioned, the service provider then returns configurati
                style="width:${length}em;"
         /><img align="baseline" alt="CVV2"
                title="Airodyssey at the English language Wikipedia [GFDL (www.gnu.org/copyleft/fdl.html)], from Wikimedia Commons"
-               src="chrome://accountprovisioner/skin/cvv2.png"
+               src="chrome://getanaccount/skin/cvv2.png"
                class="cvv-image"/>
     </td>
     </tr>

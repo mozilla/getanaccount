@@ -1,8 +1,9 @@
-content   accountprovisioner                 chrome/content/
-skin      accountprovisioner   classic/1.0   chrome/skin/
-locale    accountprovisioner   en-US         chrome/locale/en-US/
-overlay   chrome://messenger/content/mailWindowOverlay.xul chrome://accountprovisioner/content/mailWindowOverlay.xul
-overlay   chrome://messenger/content/AccountManager.xul chrome://accountprovisioner/content/AccountManagerOverlay.xul
-overlay   chrome://messenger/content/msgAccountCentral.xul chrome://accountprovisioner/content/msgAccountCentralOverlay.xul
-style     chrome://messenger/content/accountcreation/emailWizard.xul chrome://accountprovisioner/skin/accountCreation.css
-overlay   chrome://messenger/content/accountcreation/emailWizard.xul chrome://accountprovisioner/content/emailWizardOverlay.xul
+content   getanaccount                 chrome/content/
+skin      getanaccount   classic/1.0   chrome/skin/
+locale    getanaccount   en-US         chrome/locale/en-US/
+overlay   chrome://messenger/content/messenger.xul chrome://getanaccount/content/messengerOverlay.xul
+overlay   chrome://messenger/content/mailWindowOverlay.xul chrome://getanaccount/content/mailWindowOverlay.xul
+overlay   chrome://messenger/content/AccountManager.xul chrome://getanaccount/content/AccountManagerOverlay.xul
+overlay   chrome://messenger/content/msgAccountCentral.xul chrome://getanaccount/content/msgAccountCentralOverlay.xul
+style     chrome://messenger/content/accountcreation/emailWizard.xul chrome://getanaccount/skin/accountCreation.css
+overlay   chrome://messenger/content/accountcreation/emailWizard.xul chrome://getanaccount/content/emailWizardOverlay.xul
