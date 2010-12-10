@@ -397,7 +397,7 @@ $(function() {
               {"first_name": firstname, "last_name": lastname},
               function(data) {
       let results = $("#results").empty();
-      if (data.succeeded && data.addresses.length) {
+      if (data && data.succeeded && data.addresses.length) {
         actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
         results.append($("#resultsHeader").clone().removeClass("displayNone"));
