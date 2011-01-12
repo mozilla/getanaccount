@@ -361,6 +361,28 @@ If the account can be provisioned, the service provider then returns configurati
     </tr>
   </script>
 
+
+  <script id="password_tmpl" type="text/html">
+    <tr>
+    <td><label for="${id}">${label}:</label></td>
+    <td>
+        <span class="error"/>
+        <input type="password" name="${id}" class="password ${extraClass}"
+               id="${id}" length="${length}" min_length="${min_length}"
+                value="" style="width:${length}em;"/>
+    </td>
+    </tr>
+    <tr>
+    <td><label for="${id}_2">${label2}:</label></td>
+    <td>
+        <span class="error"/>
+        <input type="password" name="${id}_2"
+               id="${id}_2" length="${length}" value="" style="width:${length}em;"/>
+    </td>
+    </tr>
+  </script>
+
+
   <script id="alpha_num_tmpl" type="text/html">
     <tr>
     <td><label for="${id}">${label}:</label></td>

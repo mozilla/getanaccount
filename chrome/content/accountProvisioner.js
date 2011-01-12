@@ -187,6 +187,7 @@ function validateForm(inputs) {
 
     // Get the value.
     let value = item.attr("value").trim();
+
     if (item.hasClass("creditcard") || item.hasClass("num") ||
         item.hasClass("yearfuture"))
       value = value.replace(/\D+/g, "");
@@ -201,6 +202,13 @@ function validateForm(inputs) {
     let length = item.attr("length");
     if (length && (value.length > length)) {
       rv[item.attr("id")] = "Value too long.";
+      rv.hasErrors = true;
+      return;
+    }
+
+    let min_length = item.attr("min_length");
+    if (min_length && (value.length < min_length)) {
+      rv[item.attr("id")] = "Value too short.";
       rv.hasErrors = true;
       return;
     }
@@ -235,6 +243,18 @@ function validateForm(inputs) {
       let country = inputs.filter(".country").attr("value");
       if (((country == "CA") || (country == "US")) && (value == "")) {
         rv[item.attr("id")] = "Missing required value.";
+        rv.hasErrors = true;
+        return;
+      }
+    }
+
+    // Check that the two passwords match.
+    if (item.hasClass("password")) {
+      let password2Key = item.attr("id") + "_2";
+      let password2 = inputs.filter("#" + password2Key.replace(".", "\\."))
+                            .first().attr("value").trim();
+      if (value != password2) {
+        rv[password2Key] = "Passwords don’t match.";
         rv.hasErrors = true;
         return;
       }
