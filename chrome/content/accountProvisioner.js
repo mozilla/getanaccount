@@ -77,7 +77,6 @@ function saveState() {
 
 var storedData = {};
 var providers = {};
-var currentProvider = "";
 var actionList = [];
 var account = {};
 
@@ -303,7 +302,7 @@ function displayErrors(inputs, errors) {
  * @param config The created config.
  */
 function logSuccess(provider, config) {
-  let providerLogUrl = providers[currentProvider].log_url;
+  let providerLogUrl = providers[provider].log_url;
   if (providerLogUrl) {
     let data = {success: "true",
                 config: config };
@@ -344,17 +343,17 @@ $(function() {
   let logUrl = prefs.getCharPref("extensions.getanaccount.logUrl");
 
   $.getJSON(providerList, function(data) {
-    providers = data;
+    providers = {};
     for each (let [i, provider] in Iterator(data)) {
-      currentProvider = i;
+      providers[provider.id] = provider;
       // Fill in #provision_form.
       for each (let [i, field] in Iterator(provider.api.reverse())) {
         field.extraClass = field.required ? "required" : "";
         $("#"+field.type+"_tmpl").render(field).prependTo($("#provision_form"));
       };
       // Update the terms of service and privacy policy links.
-      $("a.tos").attr("href", provider.tos_url);
-      $("a.privacy").attr("href", provider.privacy_url);
+      $("a.tos." + provider.id).attr("href", provider.tos_url);
+      $("a.privacy." + provider.id).attr("href", provider.privacy_url);
     };
   });
   let firstname = storage.getItem("firstname") || $("#FirstName").text();
@@ -425,6 +424,7 @@ $(function() {
           $("#result_tmpl").render({"address": address, "price": data.price})
                            .appendTo(results);
         }
+        $("button.create").data("provider", "hover");
         results.append($("#resultsFooter").clone().removeClass("displayNone"));
         $("#notifications").children().hide();
         $("#notifications .success").show();
@@ -444,6 +444,10 @@ $(function() {
 
   $("#notifications").delegate("button.create", "click", function() {
     actionList.push("Creating");
+    let provider = providers[$(this).data("provider")];
+    $("#submitbutton").data("provider", $(this).data("provider"));
+    $("a.tos").attr("href", provider.tos_url);
+    $("a.privacy").attr("href", provider.privacy_url);
     saveState();
     $(this).parents(".row").addClass("selected");
     $("#account\\.first_name").val($("#FirstName").val());
@@ -473,6 +477,7 @@ $(function() {
 
   $("button.submit").click(function() {
     actionList.push("Submitting");
+    let provider = providers[$(this).data("provider")];
     saveState();
     $("#provision_form .error").text("");
     let realname = $("#FirstName").val() + " " + $("#LastName").val();
@@ -488,10 +493,10 @@ $(function() {
     }
 
     // Then add the information from this page.
-    var data = objectify(inputs, providers[currentProvider]);
+    var data = objectify(inputs, provider);
     let email = $("#results .row.selected .create").attr("address");
     $("#new_account").find(".spinner").show();
-    $.ajax({url: providers[currentProvider].url,
+    $.ajax({url: provider.url,
             type: "POST",
             dataType: "json",
             processData: false,
@@ -506,7 +511,7 @@ $(function() {
                 let config = readFromXML(new XML(data.config));
                 replaceVariables(config, realname, email, password);
                 account = createAccountInBackend(config);
-                logSuccess(currentProvider, data.config);
+                logSuccess(provider.id, data.config);
                 $("#new_account").hide();
                 $("#successful_account").show();
               }
