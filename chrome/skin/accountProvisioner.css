@@ -111,7 +111,8 @@ button:active {
   text-decoration: underline;
 }
 
-#content {
+#content,
+#existing {
   background-color: rgba(255,255,255,0.6);
   -moz-border-radius: 5px;
   -moz-box-shadow: 0 0 2px rgba(0,0,0,0.75) inset;
@@ -270,18 +271,14 @@ label.placeholder {
 }
 
 #existing {
-  /* height: 36px; */
   height: 250px;
   width: 100%;
-  font-size: small;
   color: graytext;
   background-image: -moz-linear-gradient(bottom, #fff 30%, rgba(255,255,255,0.2) 100%);
 }
 
 #existing button.existing {
   font-size: xx-large;
-  height: 220px;
-  width: 100%;
 }
 
 
