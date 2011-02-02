@@ -367,6 +367,9 @@ $(function() {
   let metaKey = false;
 
   $("#window").css("height", window.innerHeight - 1);
+  $("#search").focusin(function() {
+    $("#content .description").fadeIn();
+  });
 
   $(window).unload(function() {
     actionList.push("Closing");

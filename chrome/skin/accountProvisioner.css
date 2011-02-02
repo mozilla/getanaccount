@@ -89,25 +89,21 @@ button:active {
 .header h2 {
   font-size: larger;
   font-weight: bold;
+  padding-left: 10px;
+  padding-top: 10px;
   color: #222;
 }
 
-.header h2 > .optional {
-  font-size: small;
-  color: #666;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.header .description {
+#content .description {
   font-size: smaller;
-  margin: 5px 0;
-  color: #222;
+  margin: 5px;
+  color: #444;
+  display: none;
 }
 
 .header .commentary {
   font-size: small;
-  margin: 5px 0;
+  margin: 5px;
 }
 
 /* External things are links that open in a browser, so underline them. */
@@ -274,25 +270,18 @@ label.placeholder {
 }
 
 #existing {
-  height: 36px;
+  /* height: 36px; */
+  height: 250px;
   width: 100%;
   font-size: small;
   color: graytext;
   background-image: -moz-linear-gradient(bottom, #fff 30%, rgba(255,255,255,0.2) 100%);
 }
 
-#existing .message {
-  padding: 7px;
-}
-
-#existing a {
-  color: #0066dd;
-  text-decoration: underline;
-}
-
 #existing button.existing {
-  font-size: small;
-  height: 22px;
+  font-size: xx-large;
+  height: 220px;
+  width: 100%;
 }
 
 

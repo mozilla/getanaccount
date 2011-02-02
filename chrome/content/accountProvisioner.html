@@ -93,8 +93,22 @@
 <body>
   <div id="window" class="vbox">
 
-    <div class="header">
-      <h2>First let’s create a new email address <a class="optional">(optional*)</a></h2>
+    <div id="content" class="boxFlex">
+
+      <div class="header">
+        <h2>First let’s create a new email address…</h2>
+      </div>
+
+      <form onsubmit="return false;" id="search" class="hbox">
+        <div style="width:100%;" class="inputs boxFlex">
+          <div style="width:100%;" class="hbox">
+            <input id="FirstName" class="boxFlex" type="text" placeholder="First Name"/>
+            <input id="LastName"  class="boxFlex" type="text" placeholder="Last Name"/>
+          </div>
+        </div>
+        <input type="submit" value="Search" class="search"/>
+      </form>
+
       <div class="description">
         Through Hover.com Thunderbird can offer you a new personalized,
         private, and secure email account. Just fill in your first and last
@@ -108,21 +122,7 @@
           external hover">Privacy Policy</a>) to find available email addresses.
         </span>
       </div>
-    </div>
-
-    <div id="content" class="boxFlex">
-
-      <form onsubmit="return false;" id="search" class="hbox">
-        <div style="width:100%;" class="inputs boxFlex">
-          <div style="width:100%;" class="hbox">
-            <input id="FirstName" class="boxFlex" type="text" placeholder="First Name"/>
-            <input id="LastName"  class="boxFlex" type="text" placeholder="Last Name"/>
-          </div>
-        </div>
-        <input type="submit" value="Search" class="search"/>
-      </form>
-
-      <div id="notifications">
+    <div id="notifications">
 
         <img class="spinner"
              src="chrome://getanaccount/skin/spinner.gif"/>
@@ -155,12 +155,11 @@
     </div>
 
     <div id="existing">
+      <div class="header">
+        <h2>Or use an existing account…</h2>
+      </div>
+
       <div style="width:100%;" class="hbox">
-        <div class="message boxFlex">
-          You can also check out some <a class="external"
-          href="http://www.mozillamessaging.com/en-US/thunderbird/features/email_providers.html"
-          >free email account alternatives</a>.
-        </div>
         <button class="existing">Skip this and use my existing email</button>
       </div>
     </div>
