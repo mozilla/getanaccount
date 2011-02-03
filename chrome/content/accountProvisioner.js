@@ -321,6 +321,9 @@ function logSuccess(provider, config) {
  * @param existing True if we’re expanding the existing account section.
  */
 function expandSection(existing) {
+  // Don't expand or contract twice.
+  if ($("#existing").data("expanded") == existing)
+    return;
   $("#existing").animate({"height": existing ? "250px" : "50px",
                           "font-size": existing ? "20pt" : "10pt"}, "fast",
     function() {
@@ -328,6 +331,7 @@ function expandSection(existing) {
         $("#content .description").fadeIn();
       else
         $("#content .description").fadeOut();
+      $("#existing").data("expanded", existing);
     });
 }
 
@@ -480,6 +484,7 @@ $(function() {
     $("#account\\.first_name").val($("#FirstName").val());
     $("#account\\.last_name").val($("#LastName").val());
     $("#results > .row:not(.selected), #search").hide();
+    $("#content .description").hide();
     $(".header, .success .title, #existing").slideUp("fast", function() {
       $("#new_account").appendTo("#content").fadeIn("fast");
       $("button.create").hide();
@@ -493,6 +498,7 @@ $(function() {
     $("#FirstName").val($("#account\\.first_name").val());
     $("#LastName").val($("#account\\.last_name").val());
     $("#window").css("height", window.innerHeight - 1);
+    $("#content .description").show();
     $("button.create").show();
     $("span.create").hide();
     $("#window, #existing").show();
