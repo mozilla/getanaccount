@@ -315,6 +315,22 @@ function logSuccess(provider, config) {
   };
 }
 
+/**
+ * Expand the New or Existing account section.
+ *
+ * @param existing True if we’re expanding the existing account section.
+ */
+function expandSection(existing) {
+  $("#existing").animate({"height": existing ? "250px" : "50px",
+                          "font-size": existing ? "20pt" : "10pt"}, "fast",
+    function() {
+      if (!existing)
+        $("#content .description").fadeIn();
+      else
+        $("#content .description").fadeOut();
+    });
+}
+
 $(function() {
   // Snarf the things I need out of the window arguments.
   let NewMailAccount = window.arguments[0].NewMailAccount;
@@ -368,8 +384,16 @@ $(function() {
 
   $("#window").css("height", window.innerHeight - 1);
   $("#content").focusin(function() {
-    $("#content .description").fadeIn();
+    expandSection(false);
+  }).click(function() {
+    expandSection(false);
   });
+  $("#existing").focusin(function() {
+    expandSection(true);
+  }).click(function() {
+    expandSection(true);
+  });
+
 
   $(window).unload(function() {
     actionList.push("Closing");

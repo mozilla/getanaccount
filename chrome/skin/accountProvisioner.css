@@ -87,7 +87,7 @@ button:active {
 }
 
 .header h2 {
-  font-size: larger;
+  font-size: 20px;
   font-weight: bold;
   padding-left: 10px;
   padding-top: 10px;
@@ -275,10 +275,10 @@ label.placeholder {
   width: 100%;
   color: graytext;
   background-image: -moz-linear-gradient(bottom, #fff 30%, rgba(255,255,255,0.2) 100%);
+  font-size: 20pt;
 }
 
 #existing button.existing {
-  font-size: xx-large;
 }
 
 
