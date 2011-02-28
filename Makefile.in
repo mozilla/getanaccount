@@ -50,7 +50,7 @@ NO_JS_MANIFEST = 1
 EXTRA_COMPONENTS =
 DIST_FILES = install.rdf
 
-GETANACCOUNT_VERSION=1.0.1
+GETANACCOUNT_VERSION=$(shell grep "<em:version>" $(srcdir)/install.rdf | sed "s/^.*>\([0-9.]*\)<.*/\1/")
 
 XPI_NAME = getanaccount
 NO_JAR_AUTO_REG = 1
@@ -70,3 +70,7 @@ XUL_APP_DEFINES += -DGETANACCOUNT_VERSION=$(GETANACCOUNT_VERSION)
 DEFINES += -DGETANACCOUNT_VERSION=$(GETANACCOUNT_VERSION)
 
 include $(topsrcdir)/config/rules.mk
+
+export::
+	cd $(srcdir); ./build.sh
+	$(UNZIP) $(srcdir)/$(XPI_PKGNAME).xpi -d $(FINAL_TARGET)
