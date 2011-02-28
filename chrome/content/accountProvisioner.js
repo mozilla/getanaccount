@@ -56,7 +56,7 @@ function getLocalStorage(page) {
 
   var uri = ios.newURI(url, "", null);
   var principal = ssm.getCodebasePrincipal(uri);
-  return dsm.getLocalStorageForPrincipal(principal);
+  return dsm.getLocalStorageForPrincipal(principal, url);
 }
 
 /**
@@ -328,7 +328,7 @@ $(function() {
   var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                             .getService(Components.interfaces.nsIIOService);
   let opener = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"]
-                         .getService(Components.interfaces.nsIExternalProtocolService)
+                         .getService(Components.interfaces.nsIExternalProtocolService);
 
   $(".external").click(function (e) {
     e.preventDefault();
@@ -507,7 +507,7 @@ $(function() {
               $("#new_account").find(".spinner").hide();
               if (data.succeeded) {
                 // Create the account using data.config!
-                let password = data.password
+                let password = data.password;
                 let config = readFromXML(new XML(data.config));
                 replaceVariables(config, realname, email, password);
                 account = createAccountInBackend(config);
