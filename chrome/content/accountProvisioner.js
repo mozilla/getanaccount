@@ -56,7 +56,7 @@ function getLocalStorage(page) {
 
   var uri = ios.newURI(url, "", null);
   var principal = ssm.getCodebasePrincipal(uri);
-  return dsm.getLocalStorageForPrincipal(principal);
+  return dsm.getLocalStorageForPrincipal(principal, url);
 }
 
 /**
