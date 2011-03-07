@@ -398,6 +398,7 @@ $(function() {
   }).trigger("keydown");
 
   $(".search").click(function() {
+    $(".search").attr("disabled", true);
     actionList.push("Searching");
     $("#notifications").children().hide();
     saveState();
@@ -405,10 +406,12 @@ $(function() {
     var lastname = $("#LastName").val();
     if (firstname.length <= 0) {
       $("#FirstName").select().focus();
+      $(".search").attr("disabled", false);
       return;
     }
     if (lastname.length <= 0) {
       $("#LastName").select().focus();
+      $(".search").attr("disabled", false);
       return;
     }
     $("#notifications .spinner").show();
@@ -416,6 +419,7 @@ $(function() {
               {"first_name": firstname, "last_name": lastname},
               function(data) {
       let results = $("#results").empty();
+      $(".search").attr("disabled", false);
       if (data && data.succeeded && data.addresses.length) {
         actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
@@ -476,6 +480,7 @@ $(function() {
   });
 
   $("button.submit").click(function() {
+    $("button.submit").attr("disabled", true);
     actionList.push("Submitting");
     let provider = providers[$(this).data("provider")];
     saveState();
@@ -489,6 +494,7 @@ $(function() {
     if (errors.hasErrors) {
       actionList.push("Submitting errors");
       displayErrors(inputs, errors);
+      $("button.submit").attr("disabled", false);
       return;
     }
 
@@ -505,6 +511,7 @@ $(function() {
             success: function(data) {
               actionList.push("Submitting successful");
               $("#new_account").find(".spinner").hide();
+              $("button.submit").attr("disabled", false);
               if (data.succeeded) {
                 // Create the account using data.config!
                 let password = data.password;
@@ -521,6 +528,7 @@ $(function() {
               }
             }});
   });
+
   $("a.optional").click(function() {
     $.scrollTo($("#existing .message"), 1000, {onAfter: function(){
       $("#existing .message").effect("highlight", {}, 3000);
