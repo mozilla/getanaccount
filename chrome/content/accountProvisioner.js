@@ -56,7 +56,7 @@ function getLocalStorage(page) {
 
   var uri = ios.newURI(url, "", null);
   var principal = ssm.getCodebasePrincipal(uri);
-  return dsm.getLocalStorageForPrincipal(principal);
+  return dsm.getLocalStorageForPrincipal(principal, url);
 }
 
 /**
@@ -348,7 +348,7 @@ $(function() {
   var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                             .getService(Components.interfaces.nsIIOService);
   let opener = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"]
-                         .getService(Components.interfaces.nsIExternalProtocolService)
+                         .getService(Components.interfaces.nsIExternalProtocolService);
 
   $(".external").click(function (e) {
     e.preventDefault();
@@ -429,6 +429,7 @@ $(function() {
   }).trigger("keydown");
 
   $(".search").click(function() {
+    $(".search").attr("disabled", true);
     actionList.push("Searching");
     $("#notifications").children().hide();
     saveState();
@@ -436,10 +437,12 @@ $(function() {
     var lastname = $("#LastName").val();
     if (firstname.length <= 0) {
       $("#FirstName").select().focus();
+      $(".search").attr("disabled", false);
       return;
     }
     if (lastname.length <= 0) {
       $("#LastName").select().focus();
+      $(".search").attr("disabled", false);
       return;
     }
     $("#notifications .spinner").show();
@@ -447,6 +450,7 @@ $(function() {
               {"first_name": firstname, "last_name": lastname},
               function(data) {
       let results = $("#results").empty();
+      $(".search").attr("disabled", false);
       if (data && data.succeeded && data.addresses.length) {
         actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
@@ -509,6 +513,7 @@ $(function() {
   });
 
   $("button.submit").click(function() {
+    $("button.submit").attr("disabled", true);
     actionList.push("Submitting");
     let provider = providers[$(this).data("provider")];
     saveState();
@@ -522,6 +527,7 @@ $(function() {
     if (errors.hasErrors) {
       actionList.push("Submitting errors");
       displayErrors(inputs, errors);
+      $("button.submit").attr("disabled", false);
       return;
     }
 
@@ -538,9 +544,10 @@ $(function() {
             success: function(data) {
               actionList.push("Submitting successful");
               $("#new_account").find(".spinner").hide();
+              $("button.submit").attr("disabled", false);
               if (data.succeeded) {
                 // Create the account using data.config!
-                let password = data.password
+                let password = data.password;
                 let config = readFromXML(new XML(data.config));
                 replaceVariables(config, realname, email, password);
                 account = createAccountInBackend(config);
@@ -554,6 +561,7 @@ $(function() {
               }
             }});
   });
+
   $("a.optional").click(function() {
     $.scrollTo($("#existing .message"), 1000, {onAfter: function(){
       $("#existing .message").effect("highlight", {}, 3000);
