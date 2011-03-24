@@ -44,7 +44,7 @@
 <overlay id="getanaccount-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/javascript" src="overlay.js;version=1.8"/>
-  <hbox id="button_box">
+  <hbox id="left_buttons_area">
     <button id="other_button"
             label="Back to previous"
             class="larger-button"

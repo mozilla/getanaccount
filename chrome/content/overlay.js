@@ -81,7 +81,7 @@ function NewMailAccountProvisioner(aMsgWindow, args) {
   window.openDialog(
     "chrome://getanaccount/content/accountProvisioner.html",
     "AccountSetup",
-    "chrome,titlebar,centerscreen,width=640,height=480",
+    "chrome,titlebar,modal,centerscreen,width=640,height=480",
     args);
 }
 
