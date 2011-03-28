@@ -75,6 +75,8 @@ function saveState() {
   storage.setItem("domain", domain);
 }
 
+const MAX_SMALL_ADDRESSES = 2;
+
 var storedData = {};
 var providers = {};
 var actionList = [];
@@ -454,6 +456,7 @@ $(function() {
       let results = $("#results").empty();
       $(".search").attr("disabled", false);
       let searchingFailed = true;
+
       if (data && data.length) {
         actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
@@ -461,15 +464,24 @@ $(function() {
           if (!provider.succeeded || provider.addresses.length <= 0)
             continue
           searchingFailed = false;
+          let group = $("<div class='resultsGroup'></div>");
           let header = $("#resultsHeader").clone().removeClass("displayNone");
-          results.append(header);
+          group.append(header);
           $("<div class='header'><h2>" + providers[provider.provider].label + "</h2></div>").insertBefore(header);
           for each (let [j, address] in Iterator(provider.addresses)) {
-            $("#result_tmpl").render({"address": address, "price": provider.price})
-                             .appendTo(results);
+            let result = $("#result_tmpl").render({"address": address,
+                                                   "price": provider.price})
+                                          .appendTo(group);
+            if (j >= MAX_SMALL_ADDRESSES)
+              result.addClass("extra").hide();
+          }
+          if (provider.addresses.length > MAX_SMALL_ADDRESSES) {
+            let more = provider.addresses.length - MAX_SMALL_ADDRESSES;
+            $("#more_results_tmpl").render({"more": more}).appendTo(group);
           }
           $("button.create").data("provider", provider.provider);
-          results.append($("#resultsFooter").clone().removeClass("displayNone"));
+          group.append($("#resultsFooter").clone().removeClass("displayNone"));
+          results.append(group);
         }
         $("#notifications").children().hide();
         $("#notifications .success").show();
@@ -507,6 +519,17 @@ $(function() {
       $("span.create").show();
     });
     $("#window").css("height", "auto");
+  });
+
+  $("#results").delegate("div.more", "click", function() {
+    // Hide the other boxes.
+    let self = $(this);
+    self.parent().siblings().children(".extra").slideUp();
+    self.parent().siblings().children(".more").show();
+
+    // And show this box.
+    self.hide();
+    self.siblings(".extra").slideDown();
   });
 
   $("#back").click(function() {

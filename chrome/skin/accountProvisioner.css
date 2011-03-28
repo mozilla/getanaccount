@@ -243,6 +243,10 @@ label.placeholder {
   background-color: #f2f2f2;
 }
 
+#results .row.more:hover {
+  cursor: pointer;
+}
+
 .footer {
   margin-bottom: 10px;
 }
