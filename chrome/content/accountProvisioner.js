@@ -324,13 +324,15 @@ function expandSection(existing) {
   // Don't expand or contract twice.
   if ($("#existing").data("expanded") == existing)
     return;
-  $("#existing").animate({"height": existing ? "250px" : "50px",
+
+  // Do this now, to avoid the scrollbar.
+  if (existing)
+    $("#content .description").hide();
+  $("#existing").animate({"height": existing ? "300px" : "80px",
                           "font-size": existing ? "20pt" : "10pt"}, "fast",
     function() {
       if (!existing)
         $("#content .description").fadeIn();
-      else
-        $("#content .description").fadeOut();
       $("#existing").data("expanded", existing);
     });
 }
@@ -451,24 +453,34 @@ $(function() {
               function(data) {
       let results = $("#results").empty();
       $(".search").attr("disabled", false);
-      if (data && data.succeeded && data.addresses.length) {
+      let searchingFailed = true;
+      if (data && data.length) {
         actionList.push("Searching successful");
         $("#FirstAndLastName").text(firstname + " " + lastname);
-        results.append($("#resultsHeader").clone().removeClass("displayNone"));
-        for each (let [i, address] in Iterator(data.addresses)) {
-          $("#result_tmpl").render({"address": address, "price": data.price})
-                           .appendTo(results);
+        for each (let [i, provider] in Iterator(data)) {
+          if (!provider.succeeded || provider.addresses.length <= 0)
+            continue
+          searchingFailed = false;
+          let header = $("#resultsHeader").clone().removeClass("displayNone");
+          results.append(header);
+          $("<div class='header'><h2>" + providers[provider.provider].label + "</h2></div>").insertBefore(header);
+          for each (let [j, address] in Iterator(provider.addresses)) {
+            $("#result_tmpl").render({"address": address, "price": provider.price})
+                             .appendTo(results);
+          }
+          $("button.create").data("provider", provider.provider);
+          results.append($("#resultsFooter").clone().removeClass("displayNone"));
         }
-        $("button.create").data("provider", "hover");
-        results.append($("#resultsFooter").clone().removeClass("displayNone"));
         $("#notifications").children().hide();
         $("#notifications .success").show();
         storedData = data;
-        delete storedData.succeeded
-        delete storedData.addresses
-        delete storedData.price
+        for each (let [i, provider] in Iterator(storedData)) {
+          delete provider.succeeded
+          delete provider.addresses
+          delete provider.price
+        }
       }
-      else {
+      if (searchingFailed) {
         actionList.push("Searching failed");
         // Figure out what to do if it failed.
         $("#notifications").children().hide();
