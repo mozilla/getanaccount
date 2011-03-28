@@ -328,8 +328,10 @@ function expandSection(existing) {
     return;
 
   // Do this now, to avoid the scrollbar.
-  if (existing)
+  if (existing) {
     $("#content .description").hide();
+    $("#notifications").children().hide();
+  }
   $("#existing").animate({"height": existing ? "300px" : "80px",
                           "font-size": existing ? "20pt" : "10pt"}, "fast",
     function() {
