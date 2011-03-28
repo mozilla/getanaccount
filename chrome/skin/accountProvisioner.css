@@ -243,6 +243,10 @@ label.placeholder {
   background-color: #f2f2f2;
 }
 
+.footer {
+  margin-bottom: 10px;
+}
+
 .row .address.th {
   font-weight: normal;
 }
@@ -274,11 +278,13 @@ label.placeholder {
   height: 250px;
   width: 100%;
   color: graytext;
+  font-weight: bold;
+  text-align: center;
   background-image: -moz-linear-gradient(bottom, #fff 30%, rgba(255,255,255,0.2) 100%);
-  font-size: 20pt;
 }
 
-#existing button.existing {
+#existing .header {
+    text-align: left;
 }
 
 
