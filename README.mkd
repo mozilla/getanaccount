@@ -1,0 +1,19 @@
+The GetAnAccount New UX build.
+==============================
+
+Welcome to the new UX for the GetAnAccount addon.
+
+To use this version of the addon, you'll need to change a couple of
+preferences:
+
+* <tt>extensions.getanaccount.providerList</tt> needs to be set to
+<tt>http://bwinton.latte.ca/Work/provider/list</tt>
+* <tt>extensions.getanaccount.suggestFromName</tt> needs to be set to
+<tt>http://bwinton.latte.ca/Work/provider/suggestFromName.cgi</tt>
+
+After that, you should be able to create a new account, and see the fancy
+new UX.
+
+Also, [Chromebug](
+http://getfirebug.com/wiki/index.php/Chromebug_User_Guide) rocks for
+debugging the javascript and the layout!
