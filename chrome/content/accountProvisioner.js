@@ -529,6 +529,10 @@ $(function() {
       });
       $("#window").css("height", "auto");
     }
+    else {
+      openContentTab(provider.api);
+      window.close();
+    }
   });
 
   $("#results").delegate("div.more", "click", function() {
