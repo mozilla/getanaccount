@@ -417,10 +417,9 @@ $(function() {
   });
 
   $(window).keydown(function(e) {
-      // Handle Cmd-W.
+    // Handle Cmd-W.
     if (e.keyCode == "224") {
       metaKey = true;
-      Application.console.log("metaKey! " + metaKey);
     } else if (e.keyCode == "87" && ((e.ctrlKey && !e.altKey) || metaKey)) {
       // Handle Ctrl-W.
       window.close();
