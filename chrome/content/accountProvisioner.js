@@ -501,32 +501,34 @@ $(function() {
     actionList.push("Creating");
     let provider = providers[$(this).data("provider")];
 
+    if ($.isArray(provider.api)) {
     // Clear out and fill in #provision_form.
-    $("#provision_form .generated").remove();
-    let frag = document.createDocumentFragment();
-    for each (var [i, field] in Iterator(provider.api)) {
-      field.extraClass = field.required ? "required" : "";
-      let row = $("#"+field.type+"_tmpl").render(field).addClass("generated")[0];
-      if (row)
-        frag.appendChild(row);
-    };
-    $("#provision_form").prepend(frag);
+      $("#provision_form .generated").remove();
+      let frag = document.createDocumentFragment();
+      for each (var [i, field] in Iterator(provider.api)) {
+        field.extraClass = field.required ? "required" : "";
+        let row = $("#"+field.type+"_tmpl").render(field).addClass("generated")[0];
+        if (row)
+          frag.appendChild(row);
+      };
+      $("#provision_form").prepend(frag);
 
-    $("#submitbutton").data("provider", $(this).data("provider"));
-    $("a.tos").attr("href", provider.tos_url);
-    $("a.privacy").attr("href", provider.privacy_url);
-    saveState();
-    $(this).parents(".row").addClass("selected");
-    $("#account\\.first_name").val($("#FirstName").val());
-    $("#account\\.last_name").val($("#LastName").val());
-    $("#results > .row:not(.selected), #search").hide();
-    $("#content .description").hide();
-    $(".header, .success .title, #existing").slideUp("fast", function() {
-      $("#new_account").appendTo("#content").fadeIn("fast");
-      $("button.create").hide();
-      $("span.create").show();
-    });
-    $("#window").css("height", "auto");
+      $("#submitbutton").data("provider", $(this).data("provider"));
+      $("a.tos").attr("href", provider.tos_url);
+      $("a.privacy").attr("href", provider.privacy_url);
+      saveState();
+      $(this).parents(".row").addClass("selected");
+      $("#account\\.first_name").val($("#FirstName").val());
+      $("#account\\.last_name").val($("#LastName").val());
+      $("#results > .row:not(.selected), #search").hide();
+      $("#content .description").hide();
+      $(".header, .success .title, #existing").slideUp("fast", function() {
+        $("#new_account").appendTo("#content").fadeIn("fast");
+        $("button.create").hide();
+        $("span.create").show();
+      });
+      $("#window").css("height", "auto");
+    }
   });
 
   $("#results").delegate("div.more", "click", function() {
