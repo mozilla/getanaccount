@@ -472,9 +472,9 @@ $(function() {
             continue
           searchingFailed = false;
           let group = $("<div class='resultsGroup'></div>");
-          let header = $("#resultsHeader").clone().removeClass("displayNone");
-          group.append(header);
-          $("<div class='header'><h2>" + providers[provider.provider].label + "</h2></div>").insertBefore(header);
+          group.append($("<div class='header'><h2>" +
+                         providers[provider.provider].label +
+                         "</h2></div>"));
           for each (let [j, address] in Iterator(provider.addresses)) {
             let result = $("#result_tmpl").render({"address": address,
                                                    "price": provider.price})
