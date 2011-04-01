@@ -331,12 +331,20 @@ function expandSection(existing) {
   if (existing) {
     $("#content .description").hide();
     $("#notifications").children().hide();
+    $("#existing .header").show();
+    $(".tinyheader .title").fadeOut("fast", function() {
+      $(this).css({"opacity": "0.0", "display": "inline"});
+    });
   }
-  $("#existing").animate({"height": existing ? "300px" : "80px",
+
+  $("#existing").animate({"height": existing ? "300px" : "50px",
                           "font-size": existing ? "20pt" : "10pt"}, "fast",
     function() {
-      if (!existing)
+      if (!existing) {
         $("#content .description").fadeIn();
+        $("#existing .header").hide();
+        $(".tinyheader .title").css({"opacity": "1.0"}).fadeIn("fast");
+      }
       $("#existing").data("expanded", existing);
     });
 }
@@ -399,6 +407,9 @@ $(function() {
     expandSection(true);
   });
 
+  $(".tinyheader .title").fadeOut(0, function() {
+    $(this).css({"opacity": "0.0", "display": "inline"});
+  });
 
   $(window).unload(function() {
     actionList.push("Closing");

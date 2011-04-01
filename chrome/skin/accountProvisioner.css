@@ -86,6 +86,7 @@ button:active {
   width: 100%;
 }
 
+.tinyheader,
 .header h2 {
   font-size: 20px;
   font-weight: bold;
