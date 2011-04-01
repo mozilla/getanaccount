@@ -269,6 +269,7 @@ label.placeholder {
 .row .pricing {
   text-align: right;
   min-width: 200px;
+  display: none;
 }
 
 .pricing button.create {

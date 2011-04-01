@@ -551,10 +551,12 @@ $(function() {
     let self = $(this);
     self.parent().siblings().children(".extra").slideUp();
     self.parent().siblings().children(".more").show();
+    self.parent().siblings().find(".pricing").fadeOut("fast");
 
     // And show this box.
     self.hide();
     self.siblings(".extra").slideDown();
+    self.siblings().children(".pricing").fadeIn("fast");
   });
 
   $("#back").click(function() {
