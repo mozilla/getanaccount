@@ -219,6 +219,11 @@ label.placeholder {
   color: #333;
 }
 
+#results .price,
+#results .provider {
+  font-weight: bold;
+}
+
 #results .row {
   width: 100%;
   padding: 7px;
@@ -242,6 +247,10 @@ label.placeholder {
 
 #results .row.th {
   background-color: #f2f2f2;
+}
+
+#results .row.more {
+  text-align: right;
 }
 
 #results .row.more:hover {

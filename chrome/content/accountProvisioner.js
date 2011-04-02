@@ -472,9 +472,13 @@ $(function() {
             continue
           searchingFailed = false;
           let group = $("<div class='resultsGroup'></div>");
-          group.append($("<div class='header'><h2>" +
-                         providers[provider.provider].label +
-                         "</h2></div>"));
+          let header = $("#resultsHeader").clone().removeClass("displayNone");
+          header.children(".provider").text(providers[provider.provider].label);
+          if (provider.price)
+            header.children(".price").text("$"+provider.price);
+          else
+            header.children(".price").text("Free");
+          group.append(header);
           for each (let [j, address] in Iterator(provider.addresses)) {
             let result = $("#result_tmpl").render({"address": address,
                                                    "price": provider.price})
@@ -484,7 +488,8 @@ $(function() {
           }
           if (provider.addresses.length > MAX_SMALL_ADDRESSES) {
             let more = provider.addresses.length - MAX_SMALL_ADDRESSES;
-            $("#more_results_tmpl").render({"more": more}).appendTo(group);
+            let last = group.children(".row:nth-child("+(MAX_SMALL_ADDRESSES+1)+")");
+            $("#more_results_tmpl").render({"more": more}).appendTo(last);
           }
           group.find("button.create").data("provider", provider.provider);
           group.append($("#resultsFooter").clone().removeClass("displayNone"));
@@ -549,14 +554,16 @@ $(function() {
   $("#results").delegate("div.more", "click", function() {
     // Hide the other boxes.
     let self = $(this);
-    self.parent().siblings().children(".extra").slideUp();
-    self.parent().siblings().children(".more").show();
-    self.parent().siblings().find(".pricing").fadeOut("fast");
+    self.parent().parent().siblings().children(".extra").slideUp();
+    self.parent().parent().siblings().find(".more").show();
+    self.parent().parent().siblings().find(".pricing").fadeOut("fast");
+    self.parent().parent().siblings().find(".price").fadeIn("fast");
 
     // And show this box.
     self.hide();
-    self.siblings(".extra").slideDown();
-    self.siblings().children(".pricing").fadeIn("fast");
+    self.parent().siblings(".extra").slideDown();
+    self.parent().parent().children().find(".pricing").fadeIn("fast");
+    self.parent().siblings().find(".price").fadeOut("fast");
   });
 
   $("#back").click(function() {

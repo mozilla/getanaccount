@@ -132,6 +132,11 @@
           <div class="boxFlex tip">(You can also search for nicknames or any
             other term to find more emails)</div>
 
+          <div id="resultsHeader" class="hbox row th displayNone">
+            <div class="boxFlex provider th"></div>
+            <div class="price th"></div>
+          </div>
+
           <div id="results"></div>
         </div>
 
@@ -259,8 +264,8 @@ If the account can be provisioned, the service provider then returns configurati
   </script>
 
   <script id="more_results_tmpl" type="text/html">
-    <div class="hbox row more">
-      And ${more} more…
+    <div class="more">
+      +${more} more…
     </div>
   </script>
 
