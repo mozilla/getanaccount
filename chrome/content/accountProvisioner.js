@@ -497,11 +497,12 @@ $(function() {
         }
         $("#notifications").children().hide();
         $("#notifications .success").show();
-        storedData = data;
-        for each (let [i, provider] in Iterator(storedData)) {
+        ;
+        for each (let [i, provider] in Iterator(data)) {
           delete provider.succeeded
           delete provider.addresses
           delete provider.price
+          storedData[provider.provider] = provider;
         }
       }
       if (searchingFailed) {
@@ -546,7 +547,22 @@ $(function() {
       $("#window").css("height", "auto");
     }
     else {
-      openContentTab(provider.api);
+      // Replace the variables in the url.
+      let url = provider.api;
+      url = url.replace("{firstname}", $("#FirstName").val());
+      url = url.replace("{lastname}", $("#LastName").val());
+      url = url.replace("{email}", $(this).attr("address"));
+
+      // And add the extra data.
+      let data = storedData[provider.id];
+      delete data.provider;
+      for (let name in data) {
+        url += (url.indexOf("?") == -1 ? "?" : "&") +
+                name + "=" + encodeURIComponent(data[name]);
+      }
+
+      // Then open a content tab.
+      openContentTab(url);
       window.close();
     }
   });
