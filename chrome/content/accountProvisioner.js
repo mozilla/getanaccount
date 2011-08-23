@@ -82,220 +82,6 @@ var providers = {};
 var actionList = [];
 var account = {};
 
-/**
- * Walk down a dotted key to get the object at the bottom, creating any
- * intermediate objects/arrays if necessary.
- */
-function setObjectsForKey(root, key, value) {
-  let obj = root;
-  for each (let [i, part] in Iterator(key)) {
-    let next = key[i+1];
-    if (part == "0")
-      part = 0;
-    if (!(part in obj))
-      if (next == "0")
-        obj[part] = [{}];
-      else
-        obj[part] = {};
-
-    if (i < key.length-1)
-      obj = obj[part];
-    else {
-      if ($.isPlainObject(value))
-        for (let i in value)
-          obj[part][i] = value[i];
-      else
-        obj[part] = value;
-    }
-  }
-}
-
-/**
- * Turn a set of inputs with dotted names into an object with sub-objects.
- *
- * @param {jQuery Collection} inputs The inputs to convert.
- * @return {object} An object containing all the inputs.
- */
-function objectify(inputs, provider) {
-  var rv = {}
-  $(provider.api.reverse()).each(function(index, item) {
-    var key = item.id.split(".");
-    var value;
-
-    // Handle the special types.
-    if (item.type == "stored_data") {
-      // Populate the item from the stored data.
-      setObjectsForKey(rv, key, storedData);
-      return;
-    }
-    else if (item.type == "email") {
-      value = $("#results .row.selected .create").attr("address");
-    }
-    else {
-      value = inputs.filter("[name="+item.id+"]").attr("value");
-    }
-    if ((item.type == "credit_card") || (item.type == "num") ||
-        (item.type == "year_future") || (item.type == "month"))
-      value = value.replace(/\D+/g, "");
-
-    value = value.trim();
-
-    setObjectsForKey(rv, key, value);
-  });
-  return rv;
-}
-
-
-/**
- * Validate the credit card using the Luhn algorithm.
- *
- * @param {String} cc The credit card number.
- * @return {boolean} True if the credit card number is valid.
- */
-function validateCreditCard(cc) {
-  cc = cc.replace(/\D+/g, "")
-
-  // Empty credit card number == false.
-  if (!cc.length)
-    return false;
-
-  // Calculate the checksum according to:
-  // http://en.wikipedia.org/wiki/Luhn_algorithm
-  let checksum = 0;
-  for each (let [i, a] in Iterator(cc)) {
-    a = parseInt(a, 10);
-    if ((i % 2) || (a == 9))
-      checksum += a;
-    else if (a < 5)
-      checksum += 2 * a;
-    else
-      checksum += (2 * a) % 9;
-  }
-  return (checksum % 10) == 0;
-}
-
-
-/**
- * Validate the values for a set of inputs, returning any errors.
- *
- * @param {jQuery Collection} inputs The inputs to validate.
- * @return {array} The (possibly-empty) array of errors.
- */
-function validateForm(inputs) {
-  let rv = {hasErrors: false};
-  inputs.each(function(index, item) {
-    item = $(item);
-
-    // Get the value.
-    let value = item.attr("value").trim();
-
-    if (item.hasClass("creditcard") || item.hasClass("num") ||
-        item.hasClass("yearfuture"))
-      value = value.replace(/\D+/g, "");
-
-    // Check that required elements have a value.
-    if (item.hasClass("required") && (item.attr("value") == "")) {
-      rv[item.attr("id")] = "Missing required value.";
-      rv.hasErrors = true;
-      return;
-    }
-
-    let length = item.attr("length");
-    if (length && (value.length > length)) {
-      rv[item.attr("id")] = "Value too long.";
-      rv.hasErrors = true;
-      return;
-    }
-
-    let min_length = item.attr("min_length");
-    if (min_length && (value.length < min_length)) {
-      rv[item.attr("id")] = "Value too short.";
-      rv.hasErrors = true;
-      return;
-    }
-
-    // Check that credit cards pass the luhn check.
-    if (item.hasClass("creditcard")) {
-      if (!validateCreditCard(value)) {
-        rv[item.attr("id")] = "Credit card number invalid.";
-        rv.hasErrors = true;
-        return;
-      }
-    }
-
-    // Check that future years are in the future.
-    if (item.hasClass("yearfuture")) {
-
-      let expiryYear = parseInt(value, 10);
-      let expiryMonth = parseInt(inputs.filter(".month").attr("value"), 10) - 1;
-      let currentYear = new Date().getFullYear();
-      let currentMonth = new Date().getMonth();
-
-      if ((currentYear > expiryYear) ||
-          ((currentYear == expiryYear) && (currentMonth > expiryMonth))) {
-        rv[item.attr("id")] = "Credit card has expired.";
-        rv.hasErrors = true;
-        return;
-      }
-    }
-
-    // Check that state_caus is there if the country is CA or US.
-    if (item.hasClass("state_caus")) {
-      let country = inputs.filter(".country").attr("value");
-      if (((country == "CA") || (country == "US")) && (value == "")) {
-        rv[item.attr("id")] = "Missing required value.";
-        rv.hasErrors = true;
-        return;
-      }
-    }
-
-    // Check that the two passwords match.
-    if (item.hasClass("password")) {
-      let password2Key = item.attr("id") + "_2";
-      let password2 = inputs.filter("#" + password2Key.replace(".", "\\."))
-                            .first().attr("value").trim();
-      if (value != password2) {
-        rv[password2Key] = "Passwords don’t match.";
-        rv.hasErrors = true;
-        return;
-      }
-    }
-
-    // Check that the user has accepted the terms of service.
-    if (value == "Accept" && !item.attr("checked")) {
-      rv["accept_tos"] = "You must accept the Terms of Service.";
-      rv.hasErrors = true;
-      return;
-    }
-
-  });
-
-  return rv;
-}
-
-/**
- * Display the errors for set of inputs in the specified form.
- *
- * @param {jQuery Collection} inputs The possibly-erroneous inputs.
- * @param {array} The (possibly-empty) array of errors.
- */
-function displayErrors(inputs, errors) {
-  // General errors go in $("#provision_form .error").text("");
-  // value.next(".error").text(data.errors[i]);
-  for (let i in errors) {
-    // Populate the errors.
-    if (i == "hasErrors")
-      continue;
-
-    let value = inputs.filter("#"+i.replace(".", "\\.", "g"));
-    if (!value.length)
-      // Assume it's a global error if we can't find the
-      // specific element it applies to.
-      value = $("#provision_form #global");
-    value.siblings(".error").text(errors[i]);
-  }
-  return;
-}
 
 /**
  * Log a successful account creation, if we have a log url for that provider.
@@ -518,53 +304,23 @@ $(function() {
     actionList.push("Creating");
     let provider = providers[$(this).data("provider")];
 
-    if ($.isArray(provider.api)) {
-    // Clear out and fill in #provision_form.
-      $("#provision_form .generated").remove();
-      let frag = document.createDocumentFragment();
-      for each (var [i, field] in Iterator(provider.api)) {
-        field.extraClass = field.required ? "required" : "";
-        let row = $("#"+field.type+"_tmpl").render(field).addClass("generated")[0];
-        if (row)
-          frag.appendChild(row);
-      };
-      $("#provision_form").prepend(frag);
+    // Replace the variables in the url.
+    let url = provider.api;
+    url = url.replace("{firstname}", $("#FirstName").val());
+    url = url.replace("{lastname}", $("#LastName").val());
+    url = url.replace("{email}", $(this).attr("address"));
 
-      $("#submitbutton").data("provider", $(this).data("provider"));
-      $("a.tos").attr("href", provider.tos_url);
-      $("a.privacy").attr("href", provider.privacy_url);
-      saveState();
-      $(this).parents(".row").addClass("selected");
-      $("#account\\.first_name").val($("#FirstName").val());
-      $("#account\\.last_name").val($("#LastName").val());
-      $("#results > .row:not(.selected), #search").hide();
-      $("#content .description").hide();
-      $(".header, .success .title, #existing").slideUp("fast", function() {
-        $("#new_account").appendTo("#content").fadeIn("fast");
-        $("button.create").hide();
-        $("span.create").show();
-      });
-      $("#window").css("height", "auto");
+    // And add the extra data.
+    let data = storedData[provider.id];
+    delete data.provider;
+    for (let name in data) {
+      url += (url.indexOf("?") == -1 ? "?" : "&") +
+              name + "=" + encodeURIComponent(data[name]);
     }
-    else {
-      // Replace the variables in the url.
-      let url = provider.api;
-      url = url.replace("{firstname}", $("#FirstName").val());
-      url = url.replace("{lastname}", $("#LastName").val());
-      url = url.replace("{email}", $(this).attr("address"));
 
-      // And add the extra data.
-      let data = storedData[provider.id];
-      delete data.provider;
-      for (let name in data) {
-        url += (url.indexOf("?") == -1 ? "?" : "&") +
-                name + "=" + encodeURIComponent(data[name]);
-      }
-
-      // Then open a content tab.
-      openContentTab(url);
-      window.close();
-    }
+    // Then open a content tab.
+    openContentTab(url);
+    window.close();
   });
 
   $("#results").delegate("div.more", "click", function() {
@@ -592,59 +348,8 @@ $(function() {
     $("span.create").hide();
     $("#window, #existing").show();
     $("#provision_form .error").text("");
-    $("#new_account").hide();
     $(".header, .success .title, #existing").slideDown();
     $("#results > .row, #search").removeClass("selected").show();
-  });
-
-  $("button.submit").click(function() {
-    $("button.submit").attr("disabled", true);
-    actionList.push("Submitting");
-    let provider = providers[$(this).data("provider")];
-    saveState();
-    $("#provision_form .error").text("");
-    let realname = $("#FirstName").val() + " " + $("#LastName").val();
-    var inputs = $("#new_account").find(":input").not("[readonly]")
-                                  .not("button");
-
-    // Make sure we pass the client-side checks.
-    let errors = validateForm(inputs);
-    if (errors.hasErrors) {
-      actionList.push("Submitting errors");
-      displayErrors(inputs, errors);
-      $("button.submit").attr("disabled", false);
-      return;
-    }
-
-    // Then add the information from this page.
-    var data = objectify(inputs, provider);
-    let email = $("#results .row.selected .create").attr("address");
-    $("#new_account").find(".spinner").show();
-    $.ajax({url: provider.url,
-            type: "POST",
-            dataType: "json",
-            processData: false,
-            contentType: "text/json",
-            data: JSON.stringify(data),
-            success: function(data) {
-              actionList.push("Submitting successful");
-              $("#new_account").find(".spinner").hide();
-              $("button.submit").attr("disabled", false);
-              if (data.succeeded) {
-                // Create the account using data.config!
-                let password = data.password;
-                let config = readFromXML(new XML(data.config));
-                replaceVariables(config, realname, email, password);
-                account = createAccountInBackend(config);
-                logSuccess(provider.id, data.config);
-                $("#new_account").hide();
-                $("#successful_account").show();
-              }
-              else {
-                actionList.push("Submitting failed");
-                displayErrors(inputs, data.errors);
-              }
-            }});
   });
 
   $("a.optional").click(function() {
